@@ -76,7 +76,7 @@
                 </div>
             </div>
 
-            <!-- CALENDÁRIO DIÁRIO (NOVO) -->
+            <!-- CALENDÁRIO DIÁRIO -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider"><i class="fa-solid fa-calendar-days text-teal-600 mr-1"></i> Calendário Diário</h3>
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <!-- Totais Consolidados (Publicações, Vídeos, Revisitas, Estudos) -->
+            <!-- Totais Consolidados -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-2">
                 <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1"><i class="fa-solid fa-chart-pie text-teal-600 mr-1"></i> Totais do Mês</h3>
                 <div class="grid grid-cols-2 gap-2 text-sm">
@@ -135,50 +135,50 @@
             
             <!-- Corpo Modal -->
             <div class="p-5 flex flex-col gap-4 overflow-y-auto">
-                <!-- Horas e Minutos do Dia -->
+                <!-- Horas e Minutos do Dia (Calculados Automaticamente) -->
                 <div class="grid grid-cols-2 gap-3 bg-teal-50 p-3 rounded-xl border border-teal-100">
                     <div>
-                        <label class="block text-[11px] font-semibold text-teal-800 uppercase mb-1">Horas</label>
+                        <label class="block text-[11px] font-semibold text-teal-800 uppercase mb-1">Horas Totais</label>
                         <input type="number" id="modalHoras" min="0" max="24" class="w-full bg-white border border-teal-200 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-teal-500" value="0">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-semibold text-teal-800 uppercase mb-1">Minutos</label>
-                        <input type="number" id="modalMinutos" min="0" max="59" step="5" class="w-full bg-white border border-teal-200 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-teal-500" value="0">
+                        <label class="block text-[11px] font-semibold text-teal-800 uppercase mb-1">Minutos Totais</label>
+                        <input type="number" id="modalMinutos" min="0" max="59" class="w-full bg-white border border-teal-200 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-teal-500" value="0">
                     </div>
                 </div>
 
                 <!-- Modalidades de Campo -->
                 <div class="flex flex-col gap-2">
-                    <label class="text-xs font-bold text-slate-600 uppercase">Modalidades (Minutos gastos em cada)</label>
+                    <label class="text-xs font-bold text-slate-600 uppercase">Modalidades (Minutos em cada)</label>
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
                             <span class="font-medium text-slate-600">De casa em casa</span>
-                            <input type="number" id="modCasa" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                            <input type="number" id="modCasa" min="0" placeholder="Minutos" oninput="recalcularTempoModalidades()" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
                         </div>
                         <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
                             <span class="font-medium text-slate-600">Carrinho</span>
-                            <input type="number" id="modCarrinho" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                            <input type="number" id="modCarrinho" min="0" placeholder="Minutos" oninput="recalcularTempoModalidades()" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
                         </div>
                         <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
                             <span class="font-medium text-slate-600">Display</span>
-                            <input type="number" id="modDisplay" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                            <input type="number" id="modDisplay" min="0" placeholder="Minutos" oninput="recalcularTempoModalidades()" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
                         </div>
                         <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
                             <span class="font-medium text-slate-600">Cartas</span>
-                            <input type="number" id="modCartas" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                            <input type="number" id="modCartas" min="0" placeholder="Minutos" oninput="recalcularTempoModalidades()" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
                         </div>
                         <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
                             <span class="font-medium text-slate-600">Estudo</span>
-                            <input type="number" id="modEstudo" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                            <input type="number" id="modEstudo" min="0" placeholder="Minutos" oninput="recalcularTempoModalidades()" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
                         </div>
                         <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
                             <span class="font-medium text-slate-600">Outros</span>
-                            <input type="number" id="modOutros" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                            <input type="number" id="modOutros" min="0" placeholder="Minutos" oninput="recalcularTempoModalidades()" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
                         </div>
                     </div>
                 </div>
 
-                <!-- Atividades do Dia (Publicações, Vídeos, Revisitas, Estudos) -->
+                <!-- Atividades do Dia -->
                 <div class="flex flex-col gap-2">
                     <label class="text-xs font-bold text-slate-600 uppercase">Atividades Realizadas</label>
                     <div class="grid grid-cols-2 gap-2">
@@ -226,7 +226,6 @@
         document.getElementById('inputNome').value = localStorage.getItem('publicador_nome') || '';
         document.getElementById('selectMeta').value = localStorage.getItem('publicador_meta') || '0';
 
-        // Estrutura de dados do mês: { "2026-08": { dias: { "1": {minutos, pub, ...}, ... } } }
         let dadosMes = carregarDadosDoMes(anoMesSelecionado);
 
         let segundosCronometro = 0;
@@ -289,7 +288,6 @@
             let dataObj = new Date(ano, mes - 1, 1);
             document.getElementById('mesAtualText').innerText = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
-            // Calcular totais somando todos os dias do mês
             let totalMinutosGerais = 0;
             let totalPub = 0;
             let totalVid = 0;
@@ -314,7 +312,6 @@
             document.getElementById('totalRev').innerText = totalRev;
             document.getElementById('totalEst').innerText = totalEst;
 
-            // Meta
             const metaHoras = parseInt(document.getElementById('selectMeta').value);
             const containerBarra = document.getElementById('containerBarraMeta');
             const textoPorcentagem = document.getElementById('porcentagemMeta');
@@ -337,7 +334,6 @@
             const grid = document.getElementById('gridCalendarioDias');
             grid.innerHTML = '';
 
-            // Descobrir quantos dias tem o mês
             let totalDiasNoMes = new Date(ano, mes, 0).getDate();
             const diasSemanaNomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
@@ -387,6 +383,27 @@
             document.getElementById('modalEst').value = dadosDoDia.est || 0;
 
             document.getElementById('modalDia').classList.remove('hidden');
+        }
+
+        // Função que soma as modalidades em tempo real e atualiza os campos de Horas e Minutos
+        function recalcularTempoModalidades() {
+            let casa = parseInt(document.getElementById('modCasa').value) || 0;
+            let carrinho = parseInt(document.getElementById('modCarrinho').value) || 0;
+            let display = parseInt(document.getElementById('modDisplay').value) || 0;
+            let cartas = parseInt(document.getElementById('modCartas').value) || 0;
+            let estudo = parseInt(document.getElementById('modEstudo').value) || 0;
+            let outros = parseInt(document.getElementById('modOutros').value) || 0;
+
+            let somaMinutos = casa + carrinho + display + cartas + estudo + outros;
+
+            // Só sobrescreve se houver pelo menos algum valor digitado nas modalidades
+            if (somaMinutos > 0) {
+                let h = Math.floor(somaMinutos / 60);
+                let m = somaMinutos % 60;
+
+                document.getElementById('modalHoras').value = h;
+                document.getElementById('modalMinutos').value = m;
+            }
         }
 
         function fecharModalDia() {
@@ -453,7 +470,6 @@
 
                 let minutosTrabalhados = Math.round(segundosCronometro / 60);
                 if (minutosTrabalhados > 0) {
-                    // Adiciona automaticamente ao dia atual real se estiver no mesmo mês
                     let hojeStr = String(dataRealAtual.getDate());
                     if (anoMesSelecionado === mesRealString) {
                         if (!dadosMes.dias[hojeStr]) {
@@ -462,7 +478,7 @@
                         dadosMes.dias[hojeStr].minutos = (dadosMes.dias[hojeStr].minutos || 0) + minutosTrabalhados;
                         salvarDadosLocalStorage();
                         atualizarInterface();
-                        alert(`Adicionadas ${minutosTrabalhados} minutos ao dia de hoje (${hojeStr}) com sucesso!`);
+                        alert(`Adicionados ${minutosTrabalhados} minutos ao dia de hoje (${hojeStr}) com sucesso!`);
                     } else {
                         alert(`Cronômetro finalizado (${minutosTrabalhados} min), mas você está visualizando um mês anterior. Alterne para o mês atual para registrar no dia de hoje.`);
                     }
