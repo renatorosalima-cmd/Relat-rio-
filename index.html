@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Campo - Testemunhas de Jeová</title>
+    <!-- Tailwind CSS para estilizar rápido e bonito -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4">
+
+    <!-- Container Principal do App -->
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col">
+        
+        <!-- Cabeçalho -->
+        <header class="bg-teal-700 text-white p-5 text-center">
+            <h1 class="text-xl font-bold"><i class="fa-solid fa-clock mr-2"></i> Serviço de Campo</h1>
+            <p id="mesAtualText" class="text-xs text-teal-200 mt-1 uppercase tracking-wider"></p>
+        </header>
+
+        <!-- Corpo do App -->
+        <main class="p-5 flex flex-col gap-5">
+
+            <!-- Bloco do Cronômetro -->
+            <div class="bg-teal-50 border border-teal-100 rounded-xl p-5 text-center shadow-inner">
+                <span class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Ativo</span>
+                <div id="cronometroDisplay" class="text-5xl font-mono font-bold text-teal-900 my-3">00:00:00</div>
+                <button id="btnCronometro" onclick="alternarCronometro()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-2.5 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer">
+                    <i id="iconePlayPause" class="fa-solid fa-play"></i> <span id="textoBotaoCronometro">Iniciar Campo</span>
+                </button>
+            </div>
+
+            <!-- Resumo de Horas Acumuladas -->
+            <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="bg-teal-100 text-teal-700 w-10 h-10 rounded-lg flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">Total de Horas no Mês</p>
+                        <h2 id="totalHorasDisplay" class="text-lg font-bold text-slate-800">0h 0min</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contadores (Publicações, Revisitas, Estudos) -->
+            <div class="flex flex-col gap-3">
+                <!-- Publicações -->
+                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-book-open text-teal-600 text-lg w-6 text-center"></i>
+                        <span class="font-medium text-sm">Publicações</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="alterarContador('publicacoes', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
+                        <span id="pubCount" class="font-bold text-base w-6 text-center">0</span>
+                        <button onclick="alterarContador('publicacoes', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
+                    </div>
+                </div>
+
+                <!-- Revisitas -->
+                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-rotate-right text-teal-600 text-lg w-6 text-center"></i>
+                        <span class="font-medium text-sm">Revisitas</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="alterarContador('revisitas', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
+                        <span id="revCount" class="font-bold text-base w-6 text-center">0</span>
+                        <button onclick="alterarContador('revisitas', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
+                    </div>
+                </div>
+
+                <!-- Estudos Bíblicos -->
+                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users text-teal-600 text-lg w-6 text-center"></i>
+                        <span class="font-medium text-sm">Estudos Bíblicos</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="alterarContador('estudos', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
+                        <span id="estCount" class="font-bold text-base w-6 text-center">0</span>
+                        <button onclick="alterarContador('estudos', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Enviar WhatsApp -->
+            <button onclick="enviarWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold p-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-2">
+                <i class="fa-brands fa-whatsapp text-xl"></i> Enviar Relatório no WhatsApp
+            </button>
+
+        </main>
+
+        <!-- Rodapé simples -->
+        <footer class="bg-slate-50 p-3 text-center text-xs text-slate-400 border-t border-slate-100">
+            Dados salvos localmente no seu dispositivo 📱
+        </footer>
+    </div>
+
+    <!-- Script de Lógica -->
+    <script>
+        // Chave do mês atual para salvar no localStorage
+        const dataAtual = new Date();
+        const anoMes = `${dataAtual.getFullYear()}-${String(dataAtual.getMonth() + 1).padStart(2, '0')}`;
+        
+        // Exibir mês formatado no topo
+        const nomeMes = dataAtual.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+        document.getElementById('mesAtualText').innerText = nomeMes;
+
+        // Estado do App (carrega do localStorage se existir)
+        let dadosApp = JSON.parse(localStorage.getItem(`relatorio_${anoMes}`)) || {
+            minutos: 0,
+            publicacoes: 0,
+            revisitas: 0,
+            estudos: 0
+        };
+
+        let segundosCronometro = 0;
+        let timerInterval = null;
+        let emAndamento = false;
+
+        // Atualizar tela ao carregar
+        atualizarInterface();
+
+        function atualizarInterface() {
+            // Calcular horas e minutos totais
+            let totalMinutos = dadosApp.minutos;
+            let horas = Math.floor(totalMinutos / 60);
+            let mins = totalMinutos % 60;
+            document.getElementById('totalHorasDisplay').innerText = `${horas}h ${mins}min`;
+
+            // Contadores
+            document.getElementById('pubCount').innerText = dadosApp.publicacoes;
+            document.getElementById('revCount').innerText = dadosApp.revisitas;
+            document.getElementById('estCount').innerText = dadosApp.estudos;
+        }
+
+        function salvarDados() {
+            localStorage.setItem(`relatorio_${anoMes}`, JSON.stringify(dadosApp));
+        }
+
+        function alternarCronometro() {
+            const btn = document.getElementById('btnCronometro');
+            const icone = document.getElementById('iconePlayPause');
+            const texto = document.getElementById('textoBotaoCronometro');
+
+            if (!emAndamento) {
+                // Iniciar
+                emAndamento = true;
+                icone.className = "fa-solid fa-pause";
+                texto.innerText = "Pausar e Salvar";
+                btn.classList.remove('bg-teal-600', 'hover:bg-teal-700');
+                btn.classList.add('bg-amber-600', 'hover:bg-amber-700');
+
+                timerInterval = setInterval(() => {
+                    segundosCronometro++;
+                    let h = Math.floor(segundosCronometro / 3600).toString().padStart(2, '0');
+                    let m = Math.floor((segundosCronometro % 3600) / 60).toString().padStart(2, '0');
+                    let s = (segundosCronometro % 60).toString().padStart(2, '0');
+                    document.getElementById('cronometroDisplay').innerText = `${h}:${m}:${s}`;
+                }, 1000);
+
+            } else {
+                // Pausar e Salvar
+                clearInterval(timerInterval);
+                emAndamento = false;
+                icone.className = "fa-solid fa-play";
+                texto.innerText = "Iniciar Campo";
+                btn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
+                btn.classList.add('bg-teal-600', 'hover:bg-teal-700');
+
+                // Adicionar minutos calculados ao total
+                let minutosTrabalhados = Math.round(segundosCronometro / 60);
+                if (minutosTrabalhados > 0) {
+                    dadosApp.minutos += minutosTrabalhados;
+                    salvarDados();
+                    atualizarInterface();
+                }
+
+                segundosCronometro = 0;
+                document.getElementById('cronometroDisplay').innerText = "00:00:00";
+            }
+        }
+
+        function alterarContador(tipo, valor) {
+            if (dadosApp[tipo] + valor >= 0) {
+                dadosApp[tipo] += valor;
+                salvarDados();
+                atualizarInterface();
+            }
+        }
+
+        function enviarWhatsApp() {
+            let totalMinutos = dadosApp.minutos;
+            let horas = Math.floor(totalMinutos / 60);
+            let mins = totalMinutos % 60;
+            let horasTexto = `${horas}h ${mins}min`;
+
+            let textoMensagem = `*Relatório de Serviço - ${nomeMes}*\n\n` +
+                                `⏱️ *Horas:* ${horasTexto}\n` +
+                                `📄 *Publicações:* ${dadosApp.publicacoes}\n` +
+                                `🔄 *Revisitas:* ${dadosApp.revisitas}\n` +
+                                `📖 *Estudos Bíblicos:* ${dadosApp.estudos}`;
+
+            let urlWp = `https://wa.me/?text=${encodeURIComponent(textoMensagem)}`;
+            window.open(urlWp, '_blank');
+        }
+    </script>
+</body>
+</html>
