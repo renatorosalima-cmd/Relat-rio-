@@ -19,6 +19,14 @@
             <p id="mesAtualText" class="text-xs text-teal-200 mt-1 uppercase tracking-wider font-semibold"></p>
         </header>
 
+        <!-- Frase Salmo 110:3 -->
+        <div class="bg-teal-50 border-b border-teal-100 p-3 text-center px-6">
+            <p class="text-xs italic text-teal-900 leading-relaxed font-serif">
+                “Seu povo se apresentará voluntariamente no dia da sua força militar. Em esplêndida santidade, vindos do amanhecer”
+            </p>
+            <span class="text-[10px] font-semibold text-teal-700 block mt-1 uppercase tracking-wider">— Salmo 110:3</span>
+        </div>
+
         <!-- Corpo do App -->
         <main class="p-5 flex flex-col gap-5">
 
@@ -78,12 +86,17 @@
 
             <!-- CALENDÁRIO DIÁRIO -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider"><i class="fa-solid fa-calendar-days text-teal-600 mr-1"></i> Calendário Diário</h3>
-                    <span class="text-[10px] text-slate-400">Clique em um dia para editar</span>
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-teal-600 text-sm"></i>
+                        <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Calendário:</h3>
+                        <!-- Mês Destacado Aqui -->
+                        <span id="nomeMesCalendario" class="text-xs font-extrabold text-teal-800 bg-teal-100 px-2 py-0.5 rounded-md uppercase tracking-wide"></span>
+                    </div>
+                    <span class="text-[10px] text-slate-400">Clique para editar</span>
                 </div>
                 <!-- Grade de dias do mês -->
-                <div id="gridCalendarioDias" class="grid grid-cols-7 gap-1.5 max-h-56 overflow-y-auto pr-1">
+                <div id="gridCalendarioDias" class="grid grid-cols-7 gap-1.5 max-h-56 overflow-y-auto pr-1 pt-1">
                     <!-- Preenchido via JavaScript -->
                 </div>
             </div>
@@ -135,7 +148,7 @@
             
             <!-- Corpo Modal -->
             <div class="p-5 flex flex-col gap-4 overflow-y-auto">
-                <!-- Horas e Minutos do Dia (Calculados Automaticamente) -->
+                <!-- Horas e Minutos do Dia -->
                 <div class="grid grid-cols-2 gap-3 bg-teal-50 p-3 rounded-xl border border-teal-100">
                     <div>
                         <label class="block text-[11px] font-semibold text-teal-800 uppercase mb-1">Horas Totais</label>
@@ -286,7 +299,12 @@
         function atualizarInterface() {
             let [ano, mes] = anoMesSelecionado.split('-');
             let dataObj = new Date(ano, mes - 1, 1);
-            document.getElementById('mesAtualText').innerText = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            let nomeMesExtenso = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            
+            document.getElementById('mesAtualText').innerText = nomeMesExtenso;
+            
+            // Atualiza o destaque do mês no Calendário
+            document.getElementById('nomeMesCalendario').innerText = dataObj.toLocaleString('pt-BR', { month: 'long' });
 
             let totalMinutosGerais = 0;
             let totalPub = 0;
@@ -385,7 +403,6 @@
             document.getElementById('modalDia').classList.remove('hidden');
         }
 
-        // Função que soma as modalidades em tempo real e atualiza os campos de Horas e Minutos
         function recalcularTempoModalidades() {
             let casa = parseInt(document.getElementById('modCasa').value) || 0;
             let carrinho = parseInt(document.getElementById('modCarrinho').value) || 0;
@@ -396,7 +413,6 @@
 
             let somaMinutos = casa + carrinho + display + cartas + estudo + outros;
 
-            // Só sobrescreve se houver pelo menos algum valor digitado nas modalidades
             if (somaMinutos > 0) {
                 let h = Math.floor(somaMinutos / 60);
                 let m = somaMinutos % 60;
