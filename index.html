@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Campo - Testemunhas de Jeová</title>
-    <!-- Tailwind CSS para estilizar rápido e bonito -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4">
 
     <!-- Container Principal do App -->
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col mb-4">
         
         <!-- Cabeçalho -->
         <header class="bg-teal-700 text-white p-5 text-center">
@@ -22,6 +22,23 @@
         <!-- Corpo do App -->
         <main class="p-5 flex flex-col gap-5">
 
+            <!-- Identificação do Publicador e Meta -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Nome do Publicador</label>
+                    <input type="text" id="inputNome" placeholder="Seu nome" oninput="salvarNome()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Meta de Serviço</label>
+                    <select id="selectMeta" onchange="alterarMeta()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="0">Publicador (Sem meta fixa)</option>
+                        <option value="15">Pioneiro Auxiliar (15 Horas)</option>
+                        <option value="30">Pioneiro Auxiliar (30 Horas)</option>
+                        <option value="50">Pioneiro Regular (50 Horas)</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Bloco do Cronômetro -->
             <div class="bg-teal-50 border border-teal-100 rounded-xl p-5 text-center shadow-inner">
                 <span class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Ativo</span>
@@ -31,16 +48,23 @@
                 </button>
             </div>
 
-            <!-- Resumo de Horas Acumuladas -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-center justify-between shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="bg-teal-100 text-teal-700 w-10 h-10 rounded-lg flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-hourglass-half"></i>
+            <!-- Resumo de Horas Acumuladas e Progresso da Meta -->
+            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-teal-100 text-teal-700 w-10 h-10 rounded-lg flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-medium">Total de Horas no Mês</p>
+                            <h2 id="totalHorasDisplay" class="text-lg font-bold text-slate-800">0h 0min</h2>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-slate-500 font-medium">Total de Horas no Mês</p>
-                        <h2 id="totalHorasDisplay" class="text-lg font-bold text-slate-800">0h 0min</h2>
-                    </div>
+                    <div id="porcentagemMeta" class="text-sm font-bold text-teal-600"></div>
+                </div>
+                <!-- Barra de Progresso -->
+                <div id="containerBarraMeta" class="hidden w-full bg-slate-200 rounded-full h-2.5">
+                    <div id="barraProgresso" class="bg-teal-600 h-2.5 rounded-full" style="width: 0%"></div>
                 </div>
             </div>
 
@@ -101,15 +125,21 @@
 
     <!-- Script de Lógica -->
     <script>
-        // Chave do mês atual para salvar no localStorage
         const dataAtual = new Date();
         const anoMes = `${dataAtual.getFullYear()}-${String(dataAtual.getMonth() + 1).padStart(2, '0')}`;
         
-        // Exibir mês formatado no topo
         const nomeMes = dataAtual.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
         document.getElementById('mesAtualText').innerText = nomeMes;
 
-        // Estado do App (carrega do localStorage se existir)
+        // Carregar Nome Salvo Globalmente
+        const nomeSalvo = localStorage.getItem('publicador_nome') || '';
+        document.getElementById('inputNome').value = nomeSalvo;
+
+        // Carregar Meta Salva Globalmente
+        const metaSalva = localStorage.getItem('publicador_meta') || '0';
+        document.getElementById('selectMeta').value = metaSalva;
+
+        // Estado do App (carrega do localStorage do mês)
         let dadosApp = JSON.parse(localStorage.getItem(`relatorio_${anoMes}`)) || {
             minutos: 0,
             publicacoes: 0,
@@ -121,11 +151,20 @@
         let timerInterval = null;
         let emAndamento = false;
 
-        // Atualizar tela ao carregar
         atualizarInterface();
 
+        function salvarNome() {
+            const nome = document.getElementById('inputNome').value;
+            localStorage.setItem('publicador_nome', nome);
+        }
+
+        function alterarMeta() {
+            const meta = document.getElementById('selectMeta').value;
+            localStorage.setItem('publicador_meta', meta);
+            atualizarInterface();
+        }
+
         function atualizarInterface() {
-            // Calcular horas e minutos totais
             let totalMinutos = dadosApp.minutos;
             let horas = Math.floor(totalMinutos / 60);
             let mins = totalMinutos % 60;
@@ -135,6 +174,23 @@
             document.getElementById('pubCount').innerText = dadosApp.publicacoes;
             document.getElementById('revCount').innerText = dadosApp.revisitas;
             document.getElementById('estCount').innerText = dadosApp.estudos;
+
+            // Lógica da Meta
+            const metaHoras = parseInt(document.getElementById('selectMeta').value);
+            const containerBarra = document.getElementById('containerBarraMeta');
+            const textoPorcentagem = document.getElementById('porcentagemMeta');
+            const barra = document.getElementById('barraProgresso');
+
+            if (metaHoras > 0) {
+                containerBarra.classList.remove('hidden');
+                let totalHorasDecimais = totalMinutos / 60;
+                let progresso = Math.min(Math.round((totalHorasDecimais / metaHoras) * 100), 100);
+                textoPorcentagem.innerText = `${progresso}%`;
+                barra.style.width = `${progresso}%`;
+            } else {
+                containerBarra.classList.add('hidden');
+                textoPorcentagem.innerText = '';
+            }
         }
 
         function salvarDados() {
@@ -147,7 +203,6 @@
             const texto = document.getElementById('textoBotaoCronometro');
 
             if (!emAndamento) {
-                // Iniciar
                 emAndamento = true;
                 icone.className = "fa-solid fa-pause";
                 texto.innerText = "Pausar e Salvar";
@@ -163,7 +218,6 @@
                 }, 1000);
 
             } else {
-                // Pausar e Salvar
                 clearInterval(timerInterval);
                 emAndamento = false;
                 icone.className = "fa-solid fa-play";
@@ -171,7 +225,6 @@
                 btn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
                 btn.classList.add('bg-teal-600', 'hover:bg-teal-700');
 
-                // Adicionar minutos calculados ao total
                 let minutosTrabalhados = Math.round(segundosCronometro / 60);
                 if (minutosTrabalhados > 0) {
                     dadosApp.minutos += minutosTrabalhados;
@@ -193,12 +246,17 @@
         }
 
         function enviarWhatsApp() {
+            let nomePublicador = document.getElementById('inputNome').value.trim();
+            let cabecalhoNome = nomePublicador ? `*Publicador:* ${nomePublicador}\n` : '';
+
             let totalMinutos = dadosApp.minutos;
             let horas = Math.floor(totalMinutos / 60);
             let mins = totalMinutos % 60;
             let horasTexto = `${horas}h ${mins}min`;
 
-            let textoMensagem = `*Relatório de Serviço - ${nomeMes}*\n\n` +
+            let textoMensagem = `*Relatório de Serviço - ${nomeMes}*\n` +
+                                cabecalhoNome +
+                                `\n` +
                                 `⏱️ *Horas:* ${horasTexto}\n` +
                                 `📄 *Publicações:* ${dadosApp.publicacoes}\n` +
                                 `🔄 *Revisitas:* ${dadosApp.revisitas}\n` +
