@@ -22,7 +22,7 @@
         <!-- Corpo do App -->
         <main class="p-5 flex flex-col gap-5">
 
-            <!-- Identificação do Publicador, Meta e Seletor de Mês (Calendário Anual) -->
+            <!-- Identificação do Publicador, Meta e Seletor de Mês -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Nome do Publicador</label>
@@ -47,12 +47,12 @@
                 </div>
             </div>
 
-            <!-- Bloco do Cronômetro -->
-            <div class="bg-teal-50 border border-teal-100 rounded-xl p-5 text-center shadow-inner">
-                <span class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Ativo</span>
-                <div id="cronometroDisplay" class="text-5xl font-mono font-bold text-teal-900 my-3">00:00:00</div>
-                <button id="btnCronometro" onclick="alternarCronometro()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-2.5 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer">
-                    <i id="iconePlayPause" class="fa-solid fa-play"></i> <span id="textoBotaoCronometro">Iniciar Campo</span>
+            <!-- Bloco do Cronômetro Rápido -->
+            <div class="bg-teal-50 border border-teal-100 rounded-xl p-4 text-center shadow-inner">
+                <span class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Geral</span>
+                <div id="cronometroDisplay" class="text-4xl font-mono font-bold text-teal-900 my-2">00:00:00</div>
+                <button id="btnCronometro" onclick="alternarCronometro()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm">
+                    <i id="iconePlayPause" class="fa-solid fa-play"></i> <span id="textoBotaoCronometro">Iniciar Campo Agora</span>
                 </button>
             </div>
 
@@ -76,63 +76,43 @@
                 </div>
             </div>
 
-            <!-- Contadores (Publicações, Vídeos, Revisitas, Estudos) -->
-            <div class="flex flex-col gap-3">
-                <!-- Publicações -->
-                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-book-open text-teal-600 text-lg w-6 text-center"></i>
-                        <span class="font-medium text-sm">Publicações</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="alterarContador('publicacoes', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
-                        <span id="pubCount" class="font-bold text-base w-6 text-center">0</span>
-                        <button onclick="alterarContador('publicacoes', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
-                    </div>
+            <!-- CALENDÁRIO DIÁRIO (NOVO) -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider"><i class="fa-solid fa-calendar-days text-teal-600 mr-1"></i> Calendário Diário</h3>
+                    <span class="text-[10px] text-slate-400">Clique em um dia para editar</span>
                 </div>
-
-                <!-- Vídeos -->
-                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-video text-teal-600 text-lg w-6 text-center"></i>
-                        <span class="font-medium text-sm">Vídeos Mostrados</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="alterarContador('videos', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
-                        <span id="vidCount" class="font-bold text-base w-6 text-center">0</span>
-                        <button onclick="alterarContador('videos', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
-                    </div>
+                <!-- Grade de dias do mês -->
+                <div id="gridCalendarioDias" class="grid grid-cols-7 gap-1.5 max-h-56 overflow-y-auto pr-1">
+                    <!-- Preenchido via JavaScript -->
                 </div>
+            </div>
 
-                <!-- Revisitas -->
-                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-rotate-right text-teal-600 text-lg w-6 text-center"></i>
-                        <span class="font-medium text-sm">Revisitas</span>
+            <!-- Totais Consolidados (Publicações, Vídeos, Revisitas, Estudos) -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-2">
+                <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1"><i class="fa-solid fa-chart-pie text-teal-600 mr-1"></i> Totais do Mês</h3>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
+                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-book-open text-teal-600 mr-1"></i> Publicações</span>
+                        <span id="totalPub" class="font-bold">0</span>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="alterarContador('revisitas', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
-                        <span id="revCount" class="font-bold text-base w-6 text-center">0</span>
-                        <button onclick="alterarContador('revisitas', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
+                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-video text-teal-600 mr-1"></i> Vídeos</span>
+                        <span id="totalVid" class="font-bold">0</span>
                     </div>
-                </div>
-
-                <!-- Estudos Bíblicos -->
-                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-users text-teal-600 text-lg w-6 text-center"></i>
-                        <span class="font-medium text-sm">Estudos Bíblicos</span>
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
+                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-rotate-right text-teal-600 mr-1"></i> Revisitas</span>
+                        <span id="totalRev" class="font-bold">0</span>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="alterarContador('estudos', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
-                        <span id="estCount" class="font-bold text-base w-6 text-center">0</span>
-                        <button onclick="alterarContador('estudos', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
+                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-users text-teal-600 mr-1"></i> Estudos</span>
+                        <span id="totalEst" class="font-bold">0</span>
                     </div>
                 </div>
             </div>
 
             <!-- Botão de Enviar WhatsApp -->
-            <button onclick="enviarWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold p-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-2">
+            <button onclick="enviarWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold p-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-1">
                 <i class="fa-brands fa-whatsapp text-xl"></i> Enviar Relatório no WhatsApp
             </button>
 
@@ -144,6 +124,92 @@
         </footer>
     </div>
 
+    <!-- MODAL DE EDIÇÃO DO DIA -->
+    <div id="modalDia" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Cabeçalho Modal -->
+            <div class="bg-teal-700 text-white p-4 flex justify-between items-center">
+                <h3 id="modalTituloData" class="font-bold text-base">Editar Dia</h3>
+                <button onclick="fecharModalDia()" class="text-teal-200 hover:text-white cursor-pointer text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <!-- Corpo Modal -->
+            <div class="p-5 flex flex-col gap-4 overflow-y-auto">
+                <!-- Horas e Minutos do Dia -->
+                <div class="grid grid-cols-2 gap-3 bg-teal-50 p-3 rounded-xl border border-teal-100">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-teal-800 uppercase mb-1">Horas</label>
+                        <input type="number" id="modalHoras" min="0" max="24" class="w-full bg-white border border-teal-200 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-teal-500" value="0">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-teal-800 uppercase mb-1">Minutos</label>
+                        <input type="number" id="modalMinutos" min="0" max="59" step="5" class="w-full bg-white border border-teal-200 rounded-lg px-3 py-1.5 text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-teal-500" value="0">
+                    </div>
+                </div>
+
+                <!-- Modalidades de Campo -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-slate-600 uppercase">Modalidades (Minutos gastos em cada)</label>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
+                            <span class="font-medium text-slate-600">De casa em casa</span>
+                            <input type="number" id="modCasa" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
+                            <span class="font-medium text-slate-600">Carrinho</span>
+                            <input type="number" id="modCarrinho" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
+                            <span class="font-medium text-slate-600">Display</span>
+                            <input type="number" id="modDisplay" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
+                            <span class="font-medium text-slate-600">Cartas</span>
+                            <input type="number" id="modCartas" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
+                            <span class="font-medium text-slate-600">Estudo</span>
+                            <input type="number" id="modEstudo" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1">
+                            <span class="font-medium text-slate-600">Outros</span>
+                            <input type="number" id="modOutros" min="0" placeholder="Minutos" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atividades do Dia (Publicações, Vídeos, Revisitas, Estudos) -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-slate-600 uppercase">Atividades Realizadas</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
+                            <span class="text-xs text-slate-600">Publicações</span>
+                            <input type="number" id="modalPub" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
+                            <span class="text-xs text-slate-600">Vídeos</span>
+                            <input type="number" id="modalVid" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
+                            <span class="text-xs text-slate-600">Revisitas</span>
+                            <input type="number" id="modalRev" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
+                            <span class="text-xs text-slate-600">Estudos</span>
+                            <input type="number" id="modalEst" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodapé Modal -->
+            <div class="bg-slate-50 p-4 border-t border-slate-200 flex gap-2">
+                <button onclick="fecharModalDia()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Cancelar</button>
+                <button onclick="salvarDadosDia()" class="w-1/2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Salvar Dia</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script de Lógica -->
     <script>
         const dataRealAtual = new Date();
@@ -151,21 +217,17 @@
         const mesRealAtualIndex = dataRealAtual.getMonth(); // 0 a 11
         const mesRealString = `${anoAtual}-${String(mesRealAtualIndex + 1).padStart(2, '0')}`;
 
-        // Chave do mês selecionado atualmente na tela
         let anoMesSelecionado = mesRealString;
+        let diaEditandoAtual = null;
 
-        // Inicializar o seletor de meses do ano corrente
         popularSeletorMeses();
 
-        // Carregar Nome Salvo Globalmente
-        const nomeSalvo = localStorage.getItem('publicador_nome') || '';
-        document.getElementById('inputNome').value = nomeSalvo;
+        // Carregar Nome e Meta Salvos
+        document.getElementById('inputNome').value = localStorage.getItem('publicador_nome') || '';
+        document.getElementById('selectMeta').value = localStorage.getItem('publicador_meta') || '0';
 
-        // Carregar Meta Salva Globalmente
-        const metaSalva = localStorage.getItem('publicador_meta') || '0';
-        document.getElementById('selectMeta').value = metaSalva;
-
-        let dadosApp = carregarDadosDoMes(anoMesSelecionado);
+        // Estrutura de dados do mês: { "2026-08": { dias: { "1": {minutos, pub, ...}, ... } } }
+        let dadosMes = carregarDadosDoMes(anoMesSelecionado);
 
         let segundosCronometro = 0;
         let timerInterval = null;
@@ -176,7 +238,6 @@
         function popularSeletorMeses() {
             const select = document.getElementById('selectMesAno');
             select.innerHTML = '';
-
             const nomesMeses = [
                 "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
                 "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
@@ -187,74 +248,73 @@
                 let valorOption = `${anoAtual}-${mesStr}`;
                 let option = document.createElement('option');
                 option.value = valorOption;
-                
-                // Destacar visualmente o mês atual na lista
                 if (index === mesRealAtualIndex) {
                     option.text = `⭐ ${nome} (Atual)`;
                     option.style.fontWeight = "bold";
                 } else {
                     option.text = nome;
                 }
-
                 select.appendChild(option);
             });
-
             select.value = mesRealString;
         }
 
         function mudarMesSelecionado() {
-            const select = document.getElementById('selectMesAno');
-            anoMesSelecionado = select.value;
-            dadosApp = carregarDadosDoMes(anoMesSelecionado);
+            anoMesSelecionado = document.getElementById('selectMesAno').value;
+            dadosMes = carregarDadosDoMes(anoMesSelecionado);
             atualizarInterface();
         }
 
         function carregarDadosDoMes(mesAno) {
-            let dadosSalvos = JSON.parse(localStorage.getItem(`relatorio_${mesAno}`));
-            if (dadosSalvos) {
-                // Garante compatibilidade caso dados antigos não tenham o campo de vídeos
-                if (dadosSalvos.videos === undefined) dadosSalvos.videos = 0;
-                return dadosSalvos;
-            }
-            return {
-                minutos: 0,
-                publicacoes: 0,
-                videos: 0,
-                revisitas: 0,
-                estudos: 0
-            };
+            let salvo = JSON.parse(localStorage.getItem(`relatorio_dias_${mesAno}`));
+            if (salvo) return salvo;
+            return { dias: {} };
+        }
+
+        function salvarDadosLocalStorage() {
+            localStorage.setItem(`relatorio_dias_${anoMesSelecionado}`, JSON.stringify(dadosMes));
         }
 
         function salvarNome() {
-            const nome = document.getElementById('inputNome').value;
-            localStorage.setItem('publicador_nome', nome);
+            localStorage.setItem('publicador_nome', document.getElementById('inputNome').value);
         }
 
         function alterarMeta() {
-            const meta = document.getElementById('selectMeta').value;
-            localStorage.setItem('publicador_meta', meta);
+            localStorage.setItem('publicador_meta', document.getElementById('selectMeta').value);
             atualizarInterface();
         }
 
         function atualizarInterface() {
-            // Atualizar o texto do cabeçalho com base no mês selecionado
             let [ano, mes] = anoMesSelecionado.split('-');
             let dataObj = new Date(ano, mes - 1, 1);
-            let nomeMesFormatado = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-            document.getElementById('mesAtualText').innerText = nomeMesFormatado;
+            document.getElementById('mesAtualText').innerText = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
-            let totalMinutos = dadosApp.minutos;
-            let horas = Math.floor(totalMinutos / 60);
-            let mins = totalMinutos % 60;
+            // Calcular totais somando todos os dias do mês
+            let totalMinutosGerais = 0;
+            let totalPub = 0;
+            let totalVid = 0;
+            let totalRev = 0;
+            let totalEst = 0;
+
+            for (let d in dadosMes.dias) {
+                let item = dadosMes.dias[d];
+                totalMinutosGerais += (item.minutos || 0);
+                totalPub += (item.pub || 0);
+                totalVid += (item.vid || 0);
+                totalRev += (item.rev || 0);
+                totalEst += (item.est || 0);
+            }
+
+            let horas = Math.floor(totalMinutosGerais / 60);
+            let mins = totalMinutosGerais % 60;
             document.getElementById('totalHorasDisplay').innerText = `${horas}h ${mins}min`;
 
-            // Contadores
-            document.getElementById('pubCount').innerText = dadosApp.publicacoes;
-            document.getElementById('vidCount').innerText = dadosApp.videos;
-            document.getElementById('revCount').innerText = dadosApp.revisitas;
-            document.getElementById('estCount').innerText = dadosApp.estudos;
+            document.getElementById('totalPub').innerText = totalPub;
+            document.getElementById('totalVid').innerText = totalVid;
+            document.getElementById('totalRev').innerText = totalRev;
+            document.getElementById('totalEst').innerText = totalEst;
 
-            // Lógica da Meta
+            // Meta
             const metaHoras = parseInt(document.getElementById('selectMeta').value);
             const containerBarra = document.getElementById('containerBarraMeta');
             const textoPorcentagem = document.getElementById('porcentagemMeta');
@@ -262,18 +322,106 @@
 
             if (metaHoras > 0) {
                 containerBarra.classList.remove('hidden');
-                let totalHorasDecimais = totalMinutos / 60;
-                let progresso = Math.min(Math.round((totalHorasDecimais / metaHoras) * 100), 100);
+                let progresso = Math.min(Math.round(((totalMinutosGerais / 60) / metaHoras) * 100), 100);
                 textoPorcentagem.innerText = `${progresso}%`;
                 barra.style.width = `${progresso}%`;
             } else {
                 containerBarra.classList.add('hidden');
                 textoPorcentagem.innerText = '';
             }
+
+            renderizarCalendarioDias(ano, mes);
         }
 
-        function salvarDados() {
-            localStorage.setItem(`relatorio_${anoMesSelecionado}`, JSON.stringify(dadosApp));
+        function renderizarCalendarioDias(ano, mes) {
+            const grid = document.getElementById('gridCalendarioDias');
+            grid.innerHTML = '';
+
+            // Descobrir quantos dias tem o mês
+            let totalDiasNoMes = new Date(ano, mes, 0).getDate();
+            const diasSemanaNomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+            for (let dia = 1; dia <= totalDiasNoMes; dia++) {
+                let dataDiaObj = new Date(ano, mes - 1, dia);
+                let nomeDiaSemana = diasSemanaNomes[dataDiaObj.getDay()];
+                
+                let dadosDoDia = dadosMes.dias[dia] || {};
+                let minDia = dadosDoDia.minutos || 0;
+                let hD = Math.floor(minDia / 60);
+                let mD = minDia % 60;
+                let temHoras = minDia > 0;
+
+                let div = document.createElement('div');
+                div.className = `border rounded-xl p-2 flex flex-col items-center justify-between cursor-pointer transition text-center ${temHoras ? 'bg-teal-50 border-teal-300 shadow-xs' : 'bg-white border-slate-200 hover:bg-slate-100'}`;
+                div.onclick = () => abrirModalDia(dia, nomeDiaSemana);
+
+                div.innerHTML = `
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">${nomeDiaSemana}</span>
+                    <span class="text-sm font-bold text-slate-700">${dia}</span>
+                    <span class="text-[10px] font-mono ${temHoras ? 'text-teal-700 font-bold' : 'text-slate-400'}">${hD}h${mD > 0 ? mD+'m':''}</span>
+                `;
+                grid.appendChild(div);
+            }
+        }
+
+        function abrirModalDia(dia, nomeDiaSemana) {
+            diaEditandoAtual = dia;
+            let [ano, mes] = anoMesSelecionado.split('-');
+            document.getElementById('modalTituloData').innerText = `Dia ${dia} de ${new Date(ano, mes-1, dia).toLocaleString('pt-BR', { month: 'long' })} (${nomeDiaSemana})`;
+
+            let dadosDoDia = dadosMes.dias[dia] || { minutos: 0, casa: 0, carrinho: 0, display: 0, cartas: 0, estudo: 0, outros: 0, pub: 0, vid: 0, rev: 0, est: 0 };
+
+            document.getElementById('modalHoras').value = Math.floor((dadosDoDia.minutos || 0) / 60);
+            document.getElementById('modalMinutos').value = (dadosDoDia.minutos || 0) % 60;
+
+            document.getElementById('modCasa').value = dadosDoDia.casa || '';
+            document.getElementById('modCarrinho').value = dadosDoDia.carrinho || '';
+            document.getElementById('modDisplay').value = dadosDoDia.display || '';
+            document.getElementById('modCartas').value = dadosDoDia.cartas || '';
+            document.getElementById('modEstudo').value = dadosDoDia.estudo || '';
+            document.getElementById('modOutros').value = dadosDoDia.outros || '';
+
+            document.getElementById('modalPub').value = dadosDoDia.pub || 0;
+            document.getElementById('modalVid').value = dadosDoDia.vid || 0;
+            document.getElementById('modalRev').value = dadosDoDia.rev || 0;
+            document.getElementById('modalEst').value = dadosDoDia.est || 0;
+
+            document.getElementById('modalDia').classList.remove('hidden');
+        }
+
+        function fecharModalDia() {
+            document.getElementById('modalDia').classList.add('hidden');
+            diaEditandoAtual = null;
+        }
+
+        function salvarDadosDia() {
+            if (diaEditandoAtual === null) return;
+
+            let h = parseInt(document.getElementById('modalHoras').value) || 0;
+            let m = parseInt(document.getElementById('modalMinutos').value) || 0;
+            let minutosTotal = (h * 60) + m;
+
+            let casa = parseInt(document.getElementById('modCasa').value) || 0;
+            let carrinho = parseInt(document.getElementById('modCarrinho').value) || 0;
+            let display = parseInt(document.getElementById('modDisplay').value) || 0;
+            let cartas = parseInt(document.getElementById('modCartas').value) || 0;
+            let estudo = parseInt(document.getElementById('modEstudo').value) || 0;
+            let outros = parseInt(document.getElementById('modOutros').value) || 0;
+
+            let pub = parseInt(document.getElementById('modalPub').value) || 0;
+            let vid = parseInt(document.getElementById('modalVid').value) || 0;
+            let rev = parseInt(document.getElementById('modalRev').value) || 0;
+            let est = parseInt(document.getElementById('modalEst').value) || 0;
+
+            dadosMes.dias[diaEditandoAtual] = {
+                minutos: minutosTotal,
+                casa, carrinho, display, cartas, estudo, outros,
+                pub, vid, rev, est
+            };
+
+            salvarDadosLocalStorage();
+            fecharModalDia();
+            atualizarInterface();
         }
 
         function alternarCronometro() {
@@ -284,7 +432,7 @@
             if (!emAndamento) {
                 emAndamento = true;
                 icone.className = "fa-solid fa-pause";
-                texto.innerText = "Pausar e Salvar";
+                texto.innerText = "Pausar";
                 btn.classList.remove('bg-teal-600', 'hover:bg-teal-700');
                 btn.classList.add('bg-amber-600', 'hover:bg-amber-700');
 
@@ -295,32 +443,32 @@
                     let s = (segundosCronometro % 60).toString().padStart(2, '0');
                     document.getElementById('cronometroDisplay').innerText = `${h}:${m}:${s}`;
                 }, 1000);
-
             } else {
                 clearInterval(timerInterval);
                 emAndamento = false;
                 icone.className = "fa-solid fa-play";
-                texto.innerText = "Iniciar Campo";
+                texto.innerText = "Iniciar Campo Agora";
                 btn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
                 btn.classList.add('bg-teal-600', 'hover:bg-teal-700');
 
                 let minutosTrabalhados = Math.round(segundosCronometro / 60);
                 if (minutosTrabalhados > 0) {
-                    dadosApp.minutos += minutosTrabalhados;
-                    salvarDados();
-                    atualizarInterface();
+                    // Adiciona automaticamente ao dia atual real se estiver no mesmo mês
+                    let hojeStr = String(dataRealAtual.getDate());
+                    if (anoMesSelecionado === mesRealString) {
+                        if (!dadosMes.dias[hojeStr]) {
+                            dadosMes.dias[hojeStr] = { minutos: 0, pub: 0, vid: 0, rev: 0, est: 0 };
+                        }
+                        dadosMes.dias[hojeStr].minutos = (dadosMes.dias[hojeStr].minutos || 0) + minutosTrabalhados;
+                        salvarDadosLocalStorage();
+                        atualizarInterface();
+                        alert(`Adicionadas ${minutosTrabalhados} minutos ao dia de hoje (${hojeStr}) com sucesso!`);
+                    } else {
+                        alert(`Cronômetro finalizado (${minutosTrabalhados} min), mas você está visualizando um mês anterior. Alterne para o mês atual para registrar no dia de hoje.`);
+                    }
                 }
-
                 segundosCronometro = 0;
                 document.getElementById('cronometroDisplay').innerText = "00:00:00";
-            }
-        }
-
-        function alterarContador(tipo, valor) {
-            if (dadosApp[tipo] + valor >= 0) {
-                dadosApp[tipo] += valor;
-                salvarDados();
-                atualizarInterface();
             }
         }
 
@@ -332,19 +480,33 @@
             let dataObj = new Date(ano, mes - 1, 1);
             let nomeMesFormatado = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
-            let totalMinutos = dadosApp.minutos;
-            let horas = Math.floor(totalMinutos / 60);
-            let mins = totalMinutos % 60;
+            let totalMinutosGerais = 0;
+            let totalPub = 0;
+            let totalVid = 0;
+            let totalRev = 0;
+            let totalEst = 0;
+
+            for (let d in dadosMes.dias) {
+                let item = dadosMes.dias[d];
+                totalMinutosGerais += (item.minutos || 0);
+                totalPub += (item.pub || 0);
+                totalVid += (item.vid || 0);
+                totalRev += (item.rev || 0);
+                totalEst += (item.est || 0);
+            }
+
+            let horas = Math.floor(totalMinutosGerais / 60);
+            let mins = totalMinutosGerais % 60;
             let horasTexto = `${horas}h ${mins}min`;
 
             let textoMensagem = `*Relatório de Serviço - ${nomeMesFormatado}*\n` +
                                 cabecalhoNome +
                                 `\n` +
                                 `⏱️ *Horas:* ${horasTexto}\n` +
-                                `📄 *Publicações:* ${dadosApp.publicacoes}\n` +
-                                `🎬 *Vídeos:* ${dadosApp.videos}\n` +
-                                `🔄 *Revisitas:* ${dadosApp.revisitas}\n` +
-                                `📖 *Estudos Bíblicos:* ${dadosApp.estudos}`;
+                                `📄 *Publicações:* ${totalPub}\n` +
+                                `🎬 *Vídeos:* ${totalVid}\n` +
+                                `🔄 *Revisitas:* ${totalRev}\n` +
+                                `📖 *Estudos Bíblicos:* ${totalEst}`;
 
             let urlWp = `https://wa.me/?text=${encodeURIComponent(textoMensagem)}`;
             window.open(urlWp, '_blank');
