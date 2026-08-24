@@ -16,26 +16,34 @@
         <!-- Cabeçalho -->
         <header class="bg-teal-700 text-white p-5 text-center">
             <h1 class="text-xl font-bold"><i class="fa-solid fa-clock mr-2"></i> Serviço de Campo</h1>
-            <p id="mesAtualText" class="text-xs text-teal-200 mt-1 uppercase tracking-wider"></p>
+            <p id="mesAtualText" class="text-xs text-teal-200 mt-1 uppercase tracking-wider font-semibold"></p>
         </header>
 
         <!-- Corpo do App -->
         <main class="p-5 flex flex-col gap-5">
 
-            <!-- Identificação do Publicador e Meta -->
+            <!-- Identificação do Publicador, Meta e Seletor de Mês (Calendário Anual) -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Nome do Publicador</label>
                     <input type="text" id="inputNome" placeholder="Seu nome" oninput="salvarNome()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Meta de Serviço</label>
-                    <select id="selectMeta" onchange="alterarMeta()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-                        <option value="0">Publicador (Sem meta fixa)</option>
-                        <option value="15">Pioneiro Auxiliar (15 Horas)</option>
-                        <option value="30">Pioneiro Auxiliar (30 Horas)</option>
-                        <option value="50">Pioneiro Regular (50 Horas)</option>
-                    </select>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Meta de Serviço</label>
+                        <select id="selectMeta" onchange="alterarMeta()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                            <option value="0">Publicador</option>
+                            <option value="15">Auxiliar (15h)</option>
+                            <option value="30">Auxiliar (30h)</option>
+                            <option value="50">Regular (50h)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Mês de Referência</label>
+                        <select id="selectMesAno" onchange="mudarMesSelecionado()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium text-teal-800">
+                            <!-- Preenchido via JavaScript -->
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -64,11 +72,11 @@
                 </div>
                 <!-- Barra de Progresso -->
                 <div id="containerBarraMeta" class="hidden w-full bg-slate-200 rounded-full h-2.5">
-                    <div id="barraProgresso" class="bg-teal-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    <div id="barraProgresso" class="bg-teal-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
             </div>
 
-            <!-- Contadores (Publicações, Revisitas, Estudos) -->
+            <!-- Contadores (Publicações, Vídeos, Revisitas, Estudos) -->
             <div class="flex flex-col gap-3">
                 <!-- Publicações -->
                 <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
@@ -80,6 +88,19 @@
                         <button onclick="alterarContador('publicacoes', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
                         <span id="pubCount" class="font-bold text-base w-6 text-center">0</span>
                         <button onclick="alterarContador('publicacoes', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
+                    </div>
+                </div>
+
+                <!-- Vídeos -->
+                <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-video text-teal-600 text-lg w-6 text-center"></i>
+                        <span class="font-medium text-sm">Vídeos Mostrados</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="alterarContador('videos', -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center font-bold cursor-pointer">-</button>
+                        <span id="vidCount" class="font-bold text-base w-6 text-center">0</span>
+                        <button onclick="alterarContador('videos', 1)" class="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center font-bold cursor-pointer">+</button>
                     </div>
                 </div>
 
@@ -125,11 +146,16 @@
 
     <!-- Script de Lógica -->
     <script>
-        const dataAtual = new Date();
-        const anoMes = `${dataAtual.getFullYear()}-${String(dataAtual.getMonth() + 1).padStart(2, '0')}`;
-        
-        const nomeMes = dataAtual.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-        document.getElementById('mesAtualText').innerText = nomeMes;
+        const dataRealAtual = new Date();
+        const anoAtual = dataRealAtual.getFullYear();
+        const mesRealAtualIndex = dataRealAtual.getMonth(); // 0 a 11
+        const mesRealString = `${anoAtual}-${String(mesRealAtualIndex + 1).padStart(2, '0')}`;
+
+        // Chave do mês selecionado atualmente na tela
+        let anoMesSelecionado = mesRealString;
+
+        // Inicializar o seletor de meses do ano corrente
+        popularSeletorMeses();
 
         // Carregar Nome Salvo Globalmente
         const nomeSalvo = localStorage.getItem('publicador_nome') || '';
@@ -139,19 +165,65 @@
         const metaSalva = localStorage.getItem('publicador_meta') || '0';
         document.getElementById('selectMeta').value = metaSalva;
 
-        // Estado do App (carrega do localStorage do mês)
-        let dadosApp = JSON.parse(localStorage.getItem(`relatorio_${anoMes}`)) || {
-            minutos: 0,
-            publicacoes: 0,
-            revisitas: 0,
-            estudos: 0
-        };
+        let dadosApp = carregarDadosDoMes(anoMesSelecionado);
 
         let segundosCronometro = 0;
         let timerInterval = null;
         let emAndamento = false;
 
         atualizarInterface();
+
+        function popularSeletorMeses() {
+            const select = document.getElementById('selectMesAno');
+            select.innerHTML = '';
+
+            const nomesMeses = [
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ];
+
+            nomesMeses.forEach((nome, index) => {
+                let mesStr = String(index + 1).padStart(2, '0');
+                let valorOption = `${anoAtual}-${mesStr}`;
+                let option = document.createElement('option');
+                option.value = valorOption;
+                
+                // Destacar visualmente o mês atual na lista
+                if (index === mesRealAtualIndex) {
+                    option.text = `⭐ ${nome} (Atual)`;
+                    option.style.fontWeight = "bold";
+                } else {
+                    option.text = nome;
+                }
+
+                select.appendChild(option);
+            });
+
+            select.value = mesRealString;
+        }
+
+        function mudarMesSelecionado() {
+            const select = document.getElementById('selectMesAno');
+            anoMesSelecionado = select.value;
+            dadosApp = carregarDadosDoMes(anoMesSelecionado);
+            atualizarInterface();
+        }
+
+        function carregarDadosDoMes(mesAno) {
+            let dadosSalvos = JSON.parse(localStorage.getItem(`relatorio_${mesAno}`));
+            if (dadosSalvos) {
+                // Garante compatibilidade caso dados antigos não tenham o campo de vídeos
+                if (dadosSalvos.videos === undefined) dadosSalvos.videos = 0;
+                return dadosSalvos;
+            }
+            return {
+                minutos: 0,
+                publicacoes: 0,
+                videos: 0,
+                revisitas: 0,
+                estudos: 0
+            };
+        }
 
         function salvarNome() {
             const nome = document.getElementById('inputNome').value;
@@ -165,6 +237,12 @@
         }
 
         function atualizarInterface() {
+            // Atualizar o texto do cabeçalho com base no mês selecionado
+            let [ano, mes] = anoMesSelecionado.split('-');
+            let dataObj = new Date(ano, mes - 1, 1);
+            let nomeMesFormatado = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            document.getElementById('mesAtualText').innerText = nomeMesFormatado;
+
             let totalMinutos = dadosApp.minutos;
             let horas = Math.floor(totalMinutos / 60);
             let mins = totalMinutos % 60;
@@ -172,6 +250,7 @@
 
             // Contadores
             document.getElementById('pubCount').innerText = dadosApp.publicacoes;
+            document.getElementById('vidCount').innerText = dadosApp.videos;
             document.getElementById('revCount').innerText = dadosApp.revisitas;
             document.getElementById('estCount').innerText = dadosApp.estudos;
 
@@ -194,7 +273,7 @@
         }
 
         function salvarDados() {
-            localStorage.setItem(`relatorio_${anoMes}`, JSON.stringify(dadosApp));
+            localStorage.setItem(`relatorio_${anoMesSelecionado}`, JSON.stringify(dadosApp));
         }
 
         function alternarCronometro() {
@@ -249,16 +328,21 @@
             let nomePublicador = document.getElementById('inputNome').value.trim();
             let cabecalhoNome = nomePublicador ? `*Publicador:* ${nomePublicador}\n` : '';
 
+            let [ano, mes] = anoMesSelecionado.split('-');
+            let dataObj = new Date(ano, mes - 1, 1);
+            let nomeMesFormatado = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+
             let totalMinutos = dadosApp.minutos;
             let horas = Math.floor(totalMinutos / 60);
             let mins = totalMinutos % 60;
             let horasTexto = `${horas}h ${mins}min`;
 
-            let textoMensagem = `*Relatório de Serviço - ${nomeMes}*\n` +
+            let textoMensagem = `*Relatório de Serviço - ${nomeMesFormatado}*\n` +
                                 cabecalhoNome +
                                 `\n` +
                                 `⏱️ *Horas:* ${horasTexto}\n` +
                                 `📄 *Publicações:* ${dadosApp.publicacoes}\n` +
+                                `🎬 *Vídeos:* ${dadosApp.videos}\n` +
                                 `🔄 *Revisitas:* ${dadosApp.revisitas}\n` +
                                 `📖 *Estudos Bíblicos:* ${dadosApp.estudos}`;
 
