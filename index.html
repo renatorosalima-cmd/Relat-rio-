@@ -7,6 +7,15 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Barra de Gradiente de Cores */
+        .gradient-bar {
+            background: linear-gradient(to right, 
+                #ff0000 0%, #ff7f00 14%, #ffff00 28%, 
+                #00ff00 42%, #00ffff 57%, #0000ff 71%, 
+                #8b00ff 85%, #ff0000 100%);
+        }
+    </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4">
 
@@ -68,19 +77,19 @@
                     </div>
                 </div>
 
-                <!-- BARRA DE PERSONALIZAÇÃO DE CORES -->
+                <!-- BARRA DE PERSONALIZAÇÃO DE CORES COM GRADIENTE -->
                 <div class="pt-2 border-t border-slate-200">
                     <label class="block text-xs font-semibold text-slate-500 mb-2 uppercase flex items-center justify-between">
                         <span><i class="fa-solid fa-palette mr-1"></i> Personalização de Cores</span>
                     </label>
 
-                    <!-- Modos: Padrão vs Personalizado -->
+                    <!-- Modos: Padrão vs Personalizado (Gradiente) -->
                     <div class="flex bg-slate-200 p-1 rounded-lg mb-3 text-xs font-semibold">
                         <button id="btnModoPadrao" onclick="alternarModoCor('padrao')" class="w-1/2 py-1.5 rounded-md transition text-slate-700 bg-white shadow-xs">Padrão</button>
-                        <button id="btnModoCustom" onclick="alternarModoCor('custom')" class="w-1/2 py-1.5 rounded-md transition text-slate-600 hover:text-slate-800">Personalizado</button>
+                        <button id="btnModoCustom" onclick="alternarModoCor('custom')" class="w-1/2 py-1.5 rounded-md transition text-slate-600 hover:text-slate-800">Personalizado (Gradiente)</button>
                     </div>
 
-                    <!-- Opções Modo Padrão (Barra de Bolinhas de Cores) -->
+                    <!-- Modo Padrão -->
                     <div id="painelModoPadrao" class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-300">
                         <span class="text-xs text-slate-500 font-medium">Temas Prontos:</span>
                         <div class="flex items-center gap-2">
@@ -92,19 +101,30 @@
                         </div>
                     </div>
 
-                    <!-- Opções Modo Personalizado (Color Pickers) -->
-                    <div id="painelModoCustom" class="hidden grid-cols-3 gap-2 bg-white p-2.5 rounded-lg border border-slate-300 text-center">
-                        <div class="flex flex-col items-center gap-1">
-                            <span class="text-[10px] text-slate-500 font-bold uppercase">Principal</span>
-                            <input type="color" id="pickerCorPrincipal" value="#0f766e" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+                    <!-- Modo Personalizado (Barra Gradiente Interativa) -->
+                    <div id="painelModoCustom" class="hidden flex-col gap-3 bg-white p-3 rounded-lg border border-slate-300">
+                        <div>
+                            <span class="text-xs text-slate-600 font-semibold block mb-1">Arraste/clique na barra para escolher qualquer cor:</span>
+                            <!-- Barra Gradiente Espectro -->
+                            <div id="barraGradiente" onclick="selecionarCorDoGradiente(event)" class="gradient-bar h-8 rounded-lg cursor-pointer shadow-inner relative border border-slate-300 flex items-center justify-center">
+                                <span class="text-[10px] text-white font-bold drop-shadow-md pointer-events-none uppercase tracking-wider"><i class="fa-solid fa-hand-pointer mr-1"></i> Clique para escolher a cor</span>
+                            </div>
                         </div>
-                        <div class="flex flex-col items-center gap-1">
-                            <span class="text-[10px] text-slate-500 font-bold uppercase">Texto Destaque</span>
-                            <input type="color" id="pickerCorTexto" value="#115e59" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
-                        </div>
-                        <div class="flex flex-col items-center gap-1">
-                            <span class="text-[10px] text-slate-500 font-bold uppercase">Fundo Leve</span>
-                            <input type="color" id="pickerCorFundo" value="#f0fdf4" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+
+                        <!-- Seletores Manuais Secundários -->
+                        <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-center">
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Principal</span>
+                                <input type="color" id="pickerCorPrincipal" value="#0f766e" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+                            </div>
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Texto Destaque</span>
+                                <input type="color" id="pickerCorTexto" value="#115e59" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+                            </div>
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="text-[10px] text-slate-500 font-bold uppercase">Fundo Leve</span>
+                                <input type="color" id="pickerCorFundo" value="#f0fdf4" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -306,7 +326,7 @@
 
         let modoCor = localStorage.getItem('publicador_modo_cor') || 'padrao';
         let temaPadrao = localStorage.getItem('publicador_tema_padrao') || 'teal';
-        let coresCustom = JSON.parse(localStorage.getItem('publicador_cores_custom')) || { principal: '#0f766e', texto: '#115e59', fundo: '#f0fdf4' };
+        let coresCustom = JSON.parse(localStorage.getItem('publicador_cores_custom')) || { principal: '#0f766e', texto: '#0f766e', fundo: '#f0fdf4' };
 
         popularSeletorMeses();
 
@@ -342,14 +362,14 @@
                 btnCustom.className = "w-1/2 py-1.5 rounded-md transition text-slate-500 hover:text-slate-700";
                 painelPadrao.classList.remove('hidden');
                 painelCustom.classList.add('hidden');
-                painelCustom.classList.remove('grid');
+                painelCustom.classList.remove('flex');
                 aplicarEstilosGlobais(paletasPadrao[temaPadrao]);
             } else {
                 btnCustom.className = "w-1/2 py-1.5 rounded-md transition text-slate-800 bg-white shadow-xs font-bold";
                 btnPadrao.className = "w-1/2 py-1.5 rounded-md transition text-slate-500 hover:text-slate-700";
                 painelPadrao.classList.add('hidden');
                 painelCustom.classList.remove('hidden');
-                painelCustom.classList.add('grid');
+                painelCustom.classList.add('flex');
                 aplicarEstilosGlobais(coresCustom);
             }
         }
@@ -359,6 +379,47 @@
             localStorage.setItem('publicador_tema_padrao', nomeTema);
             aplicarEstilosGlobais(paletasPadrao[nomeTema]);
             renderizarCalendarioDias(anoMesSelecionado.split('-')[0], anoMesSelecionado.split('-')[1]);
+        }
+
+        // FUNÇÃO PARA CALCULAR COR CLICADA NO GRADIENTE
+        function selecionarCorDoGradiente(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percent = Math.max(0, Math.min(1, x / rect.width));
+
+            // Converter porcentagem para Hue (matiz de 0 a 360)
+            const hue = Math.round(percent * 360);
+            
+            // Gerar Hexadecimal para Cor Principal, Texto e Fundo
+            const corHexPrincipal = hslToHex(hue, 80, 35);
+            const corHexTexto = hslToHex(hue, 80, 25);
+            const corHexFundo = hslToHex(hue, 80, 97);
+
+            coresCustom = {
+                principal: corHexPrincipal,
+                texto: corHexTexto,
+                fundo: corHexFundo
+            };
+
+            document.getElementById('pickerCorPrincipal').value = corHexPrincipal;
+            document.getElementById('pickerCorTexto').value = corHexTexto;
+            document.getElementById('pickerCorFundo').value = corHexFundo;
+
+            localStorage.setItem('publicador_cores_custom', JSON.stringify(coresCustom));
+            aplicarEstilosGlobais(coresCustom);
+            renderizarCalendarioDias(anoMesSelecionado.split('-')[0], anoMesSelecionado.split('-')[1]);
+        }
+
+        // Converte HSL para código HEX
+        function hslToHex(h, s, l) {
+            l /= 100;
+            const a = s * Math.min(l, 1 - l) / 100;
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
         }
 
         function atualizarCorCustomizada() {
