@@ -57,6 +57,7 @@
                             <option value="15">Auxiliar (15h)</option>
                             <option value="30">Auxiliar (30h)</option>
                             <option value="50">Regular (50h)</option>
+                            <option value="100">Especial (100h)</option>
                         </select>
                     </div>
                     <div>
@@ -95,8 +96,16 @@
                     <div id="porcentagemMeta" class="text-sm font-bold text-teal-600"></div>
                 </div>
                 <!-- Barra de Progresso -->
-                <div id="containerBarraMeta" class="hidden w-full bg-slate-200 rounded-full h-2.5">
+                <div id="containerBarraMeta" class="hidden w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
                     <div id="barraProgresso" class="bg-teal-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <!-- Mensagem de Meta Concluída -->
+                <div id="mensagemMetaConcluida" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-lg text-center animate-bounce mt-1">
+                    <p class="text-xs font-bold flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        <span>Parabéns, meta concluída!</span>
+                    </p>
+                    <span class="text-[10px] font-medium text-emerald-600 block mt-0.5">Mateus 24:14</span>
                 </div>
             </div>
 
@@ -354,14 +363,23 @@
             const containerBarra = document.getElementById('containerBarraMeta');
             const textoPorcentagem = document.getElementById('porcentagemMeta');
             const barra = document.getElementById('barraProgresso');
+            const msgMeta = document.getElementById('mensagemMetaConcluida');
 
             if (metaHoras > 0) {
                 containerBarra.classList.remove('hidden');
                 let progresso = Math.min(Math.round(((totalMinutosGerais / 60) / metaHoras) * 100), 100);
                 textoPorcentagem.innerText = `${progresso}%`;
                 barra.style.width = `${progresso}%`;
+
+                // Exibe a mensagem caso atinja ou ultrapasse a meta
+                if (totalMinutosGerais >= metaHoras * 60) {
+                    msgMeta.classList.remove('hidden');
+                } else {
+                    msgMeta.classList.add('hidden');
+                }
             } else {
                 containerBarra.classList.add('hidden');
+                msgMeta.classList.add('hidden');
                 textoPorcentagem.innerText = '';
             }
 
