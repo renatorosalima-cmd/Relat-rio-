@@ -68,17 +68,47 @@
                     </div>
                 </div>
 
-                <!-- Personalização de Tema / Paleta de Cores -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase"><i class="fa-solid fa-palette mr-1"></i> Tema de Cores</label>
-                    <select id="selectTema" onchange="alterarTema()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium">
-                        <option value="teal">Padrão (Verde Teal)</option>
-                        <option value="blue">Azul Oceano</option>
-                        <option value="purple">Roxo Imperial</option>
-                        <option value="slate">Grafite Elegante</option>
-                        <option value="rose">Vinho Quente</option>
-                    </select>
+                <!-- BARRA DE PERSONALIZAÇÃO DE CORES -->
+                <div class="pt-2 border-t border-slate-200">
+                    <label class="block text-xs font-semibold text-slate-500 mb-2 uppercase flex items-center justify-between">
+                        <span><i class="fa-solid fa-palette mr-1"></i> Personalização de Cores</span>
+                    </label>
+
+                    <!-- Modos: Padrão vs Personalizado -->
+                    <div class="flex bg-slate-200 p-1 rounded-lg mb-3 text-xs font-semibold">
+                        <button id="btnModoPadrao" onclick="alternarModoCor('padrao')" class="w-1/2 py-1.5 rounded-md transition text-slate-700 bg-white shadow-xs">Padrão</button>
+                        <button id="btnModoCustom" onclick="alternarModoCor('custom')" class="w-1/2 py-1.5 rounded-md transition text-slate-600 hover:text-slate-800">Personalizado</button>
+                    </div>
+
+                    <!-- Opções Modo Padrão (Barra de Bolinhas de Cores) -->
+                    <div id="painelModoPadrao" class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-300">
+                        <span class="text-xs text-slate-500 font-medium">Temas Prontos:</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="selecionarTemaPadrao('teal')" title="Verde Teal" class="w-7 h-7 rounded-full bg-teal-700 hover:scale-110 transition border-2 border-white shadow-xs cursor-pointer"></button>
+                            <button onclick="selecionarTemaPadrao('blue')" title="Azul" class="w-7 h-7 rounded-full bg-blue-700 hover:scale-110 transition border-2 border-white shadow-xs cursor-pointer"></button>
+                            <button onclick="selecionarTemaPadrao('purple')" title="Roxo" class="w-7 h-7 rounded-full bg-purple-700 hover:scale-110 transition border-2 border-white shadow-xs cursor-pointer"></button>
+                            <button onclick="selecionarTemaPadrao('slate')" title="Grafite" class="w-7 h-7 rounded-full bg-slate-800 hover:scale-110 transition border-2 border-white shadow-xs cursor-pointer"></button>
+                            <button onclick="selecionarTemaPadrao('rose')" title="Vinho" class="w-7 h-7 rounded-full bg-rose-800 hover:scale-110 transition border-2 border-white shadow-xs cursor-pointer"></button>
+                        </div>
+                    </div>
+
+                    <!-- Opções Modo Personalizado (Color Pickers) -->
+                    <div id="painelModoCustom" class="hidden grid-cols-3 gap-2 bg-white p-2.5 rounded-lg border border-slate-300 text-center">
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] text-slate-500 font-bold uppercase">Principal</span>
+                            <input type="color" id="pickerCorPrincipal" value="#0f766e" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] text-slate-500 font-bold uppercase">Texto Destaque</span>
+                            <input type="color" id="pickerCorTexto" value="#115e59" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] text-slate-500 font-bold uppercase">Fundo Leve</span>
+                            <input type="color" id="pickerCorFundo" value="#f0fdf4" onchange="atualizarCorCustomizada()" class="w-8 h-8 rounded border-none cursor-pointer">
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <!-- Bloco do Cronômetro Rápido -->
@@ -258,122 +288,12 @@
 
     <!-- Script de Lógica -->
     <script>
-        const paletas = {
-            teal: {
-                header: 'bg-teal-700',
-                headerSub: 'text-teal-200',
-                banner: 'bg-teal-50 border-teal-100',
-                bannerTexto: 'text-teal-900',
-                bannerAutor: 'text-teal-700',
-                cronometroCard: 'bg-teal-50 border-teal-100',
-                cronometroSub: 'text-teal-600',
-                cronometroTag: 'text-teal-700 bg-teal-100/80',
-                cronometroNum: 'text-teal-900',
-                btnCronometro: 'bg-teal-600 hover:bg-teal-700',
-                iconeHorasBg: 'bg-teal-100 text-teal-700',
-                porcentagemText: 'text-teal-600',
-                barraProgresso: 'bg-teal-600',
-                icones: 'text-teal-600',
-                mesAnoSelect: 'text-teal-800',
-                badgeMes: 'text-teal-800 bg-teal-100',
-                cardDiaAtivo: 'bg-teal-50 border-teal-300',
-                textoDiaAtivo: 'text-teal-700',
-                boxEstudos: 'border-teal-200 bg-teal-50/50',
-                modalHeader: 'bg-teal-700',
-                btnSalvarDia: 'bg-teal-600 hover:bg-teal-700'
-            },
-            blue: {
-                header: 'bg-blue-700',
-                headerSub: 'text-blue-200',
-                banner: 'bg-blue-50 border-blue-100',
-                bannerTexto: 'text-blue-900',
-                bannerAutor: 'text-blue-700',
-                cronometroCard: 'bg-blue-50 border-blue-100',
-                cronometroSub: 'text-blue-600',
-                cronometroTag: 'text-blue-700 bg-blue-100/80',
-                cronometroNum: 'text-blue-900',
-                btnCronometro: 'bg-blue-600 hover:bg-blue-700',
-                iconeHorasBg: 'bg-blue-100 text-blue-700',
-                porcentagemText: 'text-blue-600',
-                barraProgresso: 'bg-blue-600',
-                icones: 'text-blue-600',
-                mesAnoSelect: 'text-blue-800',
-                badgeMes: 'text-blue-800 bg-blue-100',
-                cardDiaAtivo: 'bg-blue-50 border-blue-300',
-                textoDiaAtivo: 'text-blue-700',
-                boxEstudos: 'border-blue-200 bg-blue-50/50',
-                modalHeader: 'bg-blue-700',
-                btnSalvarDia: 'bg-blue-600 hover:bg-blue-700'
-            },
-            purple: {
-                header: 'bg-purple-700',
-                headerSub: 'text-purple-200',
-                banner: 'bg-purple-50 border-purple-100',
-                bannerTexto: 'text-purple-900',
-                bannerAutor: 'text-purple-700',
-                cronometroCard: 'bg-purple-50 border-purple-100',
-                cronometroSub: 'text-purple-600',
-                cronometroTag: 'text-purple-700 bg-purple-100/80',
-                cronometroNum: 'text-purple-900',
-                btnCronometro: 'bg-purple-600 hover:bg-purple-700',
-                iconeHorasBg: 'bg-purple-100 text-purple-700',
-                porcentagemText: 'text-purple-600',
-                barraProgresso: 'bg-purple-600',
-                icones: 'text-purple-600',
-                mesAnoSelect: 'text-purple-800',
-                badgeMes: 'text-purple-800 bg-purple-100',
-                cardDiaAtivo: 'bg-purple-50 border-purple-300',
-                textoDiaAtivo: 'text-purple-700',
-                boxEstudos: 'border-purple-200 bg-purple-50/50',
-                modalHeader: 'bg-purple-700',
-                btnSalvarDia: 'bg-purple-600 hover:bg-purple-700'
-            },
-            slate: {
-                header: 'bg-slate-800',
-                headerSub: 'text-slate-300',
-                banner: 'bg-slate-100 border-slate-200',
-                bannerTexto: 'text-slate-900',
-                bannerAutor: 'text-slate-700',
-                cronometroCard: 'bg-slate-100 border-slate-200',
-                cronometroSub: 'text-slate-600',
-                cronometroTag: 'text-slate-700 bg-slate-200',
-                cronometroNum: 'text-slate-900',
-                btnCronometro: 'bg-slate-700 hover:bg-slate-800',
-                iconeHorasBg: 'bg-slate-200 text-slate-800',
-                porcentagemText: 'text-slate-700',
-                barraProgresso: 'bg-slate-700',
-                icones: 'text-slate-700',
-                mesAnoSelect: 'text-slate-800',
-                badgeMes: 'text-slate-800 bg-slate-200',
-                cardDiaAtivo: 'bg-slate-100 border-slate-400',
-                textoDiaAtivo: 'text-slate-800',
-                boxEstudos: 'border-slate-300 bg-slate-100/60',
-                modalHeader: 'bg-slate-800',
-                btnSalvarDia: 'bg-slate-700 hover:bg-slate-800'
-            },
-            rose: {
-                header: 'bg-rose-800',
-                headerSub: 'text-rose-200',
-                banner: 'bg-rose-50 border-rose-100',
-                bannerTexto: 'text-rose-950',
-                bannerAutor: 'text-rose-800',
-                cronometroCard: 'bg-rose-50 border-rose-100',
-                cronometroSub: 'text-rose-700',
-                cronometroTag: 'text-rose-800 bg-rose-100/80',
-                cronometroNum: 'text-rose-950',
-                btnCronometro: 'bg-rose-700 hover:bg-rose-800',
-                iconeHorasBg: 'bg-rose-100 text-rose-800',
-                porcentagemText: 'text-rose-700',
-                barraProgresso: 'bg-rose-700',
-                icones: 'text-rose-700',
-                mesAnoSelect: 'text-rose-900',
-                badgeMes: 'text-rose-900 bg-rose-100',
-                cardDiaAtivo: 'bg-rose-50 border-rose-300',
-                textoDiaAtivo: 'text-rose-800',
-                boxEstudos: 'border-rose-200 bg-rose-50/50',
-                modalHeader: 'bg-rose-800',
-                btnSalvarDia: 'bg-rose-700 hover:bg-rose-800'
-            }
+        const paletasPadrao = {
+            teal: { principal: '#0f766e', texto: '#0f766e', fundo: '#f0fdf4' },
+            blue: { principal: '#1d4ed8', texto: '#1d4ed8', fundo: '#eff6ff' },
+            purple: { principal: '#7e22ce', texto: '#7e22ce', fundo: '#faf5ff' },
+            slate: { principal: '#1e293b', texto: '#334155', fundo: '#f8fafc' },
+            rose: { principal: '#9f1239', texto: '#9f1239', fundo: '#fff1f2' }
         };
 
         const dataRealAtual = new Date();
@@ -383,7 +303,10 @@
 
         let anoMesSelecionado = mesRealString;
         let diaEditandoAtual = null;
-        let temaAtual = localStorage.getItem('publicador_tema') || 'teal';
+
+        let modoCor = localStorage.getItem('publicador_modo_cor') || 'padrao';
+        let temaPadrao = localStorage.getItem('publicador_tema_padrao') || 'teal';
+        let coresCustom = JSON.parse(localStorage.getItem('publicador_cores_custom')) || { principal: '#0f766e', texto: '#115e59', fundo: '#f0fdf4' };
 
         popularSeletorMeses();
 
@@ -391,7 +314,10 @@
         document.getElementById('inputCongregacao').value = localStorage.getItem('publicador_congregacao') || '';
         document.getElementById('inputCircuito').value = localStorage.getItem('publicador_circuito') || '';
         document.getElementById('selectMeta').value = localStorage.getItem('publicador_meta') || '0';
-        document.getElementById('selectTema').value = temaAtual;
+
+        document.getElementById('pickerCorPrincipal').value = coresCustom.principal;
+        document.getElementById('pickerCorTexto').value = coresCustom.texto;
+        document.getElementById('pickerCorFundo').value = coresCustom.fundo;
 
         let dadosMes = carregarDadosDoMes(anoMesSelecionado);
 
@@ -399,53 +325,88 @@
         let timerInterval = null;
         let emAndamento = false;
 
-        aplicarTema(temaAtual);
+        alternarModoCor(modoCor);
         atualizarInterface();
 
-        function alterarTema() {
-            temaAtual = document.getElementById('selectTema').value;
-            localStorage.setItem('publicador_tema', temaAtual);
-            aplicarTema(temaAtual);
-            atualizarInterface();
+        function alternarModoCor(modo) {
+            modoCor = modo;
+            localStorage.setItem('publicador_modo_cor', modo);
+
+            const btnPadrao = document.getElementById('btnModoPadrao');
+            const btnCustom = document.getElementById('btnModoCustom');
+            const painelPadrao = document.getElementById('painelModoPadrao');
+            const painelCustom = document.getElementById('painelModoCustom');
+
+            if (modo === 'padrao') {
+                btnPadrao.className = "w-1/2 py-1.5 rounded-md transition text-slate-800 bg-white shadow-xs font-bold";
+                btnCustom.className = "w-1/2 py-1.5 rounded-md transition text-slate-500 hover:text-slate-700";
+                painelPadrao.classList.remove('hidden');
+                painelCustom.classList.add('hidden');
+                painelCustom.classList.remove('grid');
+                aplicarEstilosGlobais(paletasPadrao[temaPadrao]);
+            } else {
+                btnCustom.className = "w-1/2 py-1.5 rounded-md transition text-slate-800 bg-white shadow-xs font-bold";
+                btnPadrao.className = "w-1/2 py-1.5 rounded-md transition text-slate-500 hover:text-slate-700";
+                painelPadrao.classList.add('hidden');
+                painelCustom.classList.remove('hidden');
+                painelCustom.classList.add('grid');
+                aplicarEstilosGlobais(coresCustom);
+            }
         }
 
-        function aplicarTema(temaKey) {
-            const t = paletas[temaKey] || paletas.teal;
+        function selecionarTemaPadrao(nomeTema) {
+            temaPadrao = nomeTema;
+            localStorage.setItem('publicador_tema_padrao', nomeTema);
+            aplicarEstilosGlobais(paletasPadrao[nomeTema]);
+            renderizarCalendarioDias(anoMesSelecionado.split('-')[0], anoMesSelecionado.split('-')[1]);
+        }
 
-            document.getElementById('appHeader').className = `${t.header} text-white p-5 text-center transition-colors`;
-            document.getElementById('mesAtualText').className = `text-xs ${t.headerSub} mt-1 uppercase tracking-wider font-semibold`;
+        function atualizarCorCustomizada() {
+            coresCustom = {
+                principal: document.getElementById('pickerCorPrincipal').value,
+                texto: document.getElementById('pickerCorTexto').value,
+                fundo: document.getElementById('pickerCorFundo').value
+            };
+            localStorage.setItem('publicador_cores_custom', JSON.stringify(coresCustom));
+            aplicarEstilosGlobais(coresCustom);
+            renderizarCalendarioDias(anoMesSelecionado.split('-')[0], anoMesSelecionado.split('-')[1]);
+        }
 
-            document.getElementById('bannerFrase').className = `${t.banner} border-b p-3 text-center px-6 transition-colors`;
-            document.getElementById('textoFrase').className = `text-xs italic ${t.bannerTexto} leading-relaxed font-serif`;
-            document.getElementById('autorFrase').className = `text-[10px] font-semibold ${t.bannerAutor} block mt-1 uppercase tracking-wider`;
+        function aplicarEstilosGlobais(c) {
+            document.getElementById('appHeader').style.backgroundColor = c.principal;
+            document.getElementById('bannerFrase').style.backgroundColor = c.fundo;
+            document.getElementById('textoFrase').style.color = c.texto;
+            document.getElementById('autorFrase').style.color = c.principal;
 
-            document.getElementById('selectMesAno').className = `w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium ${t.mesAnoSelect}`;
-
-            document.getElementById('cardCronometro').className = `${t.cronometroCard} border rounded-xl p-4 text-center shadow-inner transition-colors`;
-            document.getElementById('subtituloCronometro').className = `text-xs ${t.cronometroSub} font-semibold uppercase tracking-wide`;
-            document.getElementById('tagCronometro').className = `text-[10px] ${t.cronometroTag} px-2 py-0.5 rounded-full font-medium`;
-            document.getElementById('cronometroDisplay').className = `text-4xl font-mono font-bold ${t.cronometroNum} my-2`;
+            document.getElementById('cardCronometro').style.backgroundColor = c.fundo;
+            document.getElementById('subtituloCronometro').style.color = c.texto;
+            document.getElementById('cronometroDisplay').style.color = c.texto;
 
             if (!emAndamento) {
-                document.getElementById('btnCronometro').className = `${t.btnCronometro} text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm`;
+                document.getElementById('btnCronometro').style.backgroundColor = c.principal;
             }
 
-            document.getElementById('iconeHorasBg').className = `${t.iconeHorasBg} w-10 h-10 rounded-lg flex items-center justify-center text-lg transition-colors`;
-            document.getElementById('porcentagemMeta').className = `text-sm font-bold ${t.porcentagemText}`;
-            document.getElementById('barraProgresso').className = `${t.barraProgresso} h-2.5 rounded-full transition-all duration-300`;
+            document.getElementById('iconeHorasBg').style.backgroundColor = c.fundo;
+            document.getElementById('iconeHorasBg').style.color = c.principal;
+            document.getElementById('porcentagemMeta').style.color = c.principal;
+            document.getElementById('barraProgresso').style.backgroundColor = c.principal;
 
-            document.getElementById('nomeMesCalendario').className = `text-xs font-extrabold ${t.badgeMes} px-2 py-0.5 rounded-md uppercase tracking-wide`;
-            document.getElementById('iconeCalendario').className = `fa-solid fa-calendar-days ${t.icones} text-sm`;
+            document.getElementById('nomeMesCalendario').style.backgroundColor = c.fundo;
+            document.getElementById('nomeMesCalendario').style.color = c.texto;
+            document.getElementById('iconeCalendario').style.color = c.principal;
 
-            document.getElementById('iconeGrafico').className = `fa-solid fa-chart-pie ${t.icones} mr-1`;
-            document.getElementById('iconePub').className = `fa-solid fa-book-open ${t.icones} mr-1`;
-            document.getElementById('iconeVid').className = `fa-solid fa-video ${t.icones} mr-1`;
-            document.getElementById('iconeRev').className = `fa-solid fa-rotate-right ${t.icones} mr-1`;
-            document.getElementById('iconeEstudos').className = `fa-solid fa-users ${t.icones} mr-1`;
-            document.getElementById('boxEstudos').className = `bg-white p-2 rounded-lg border justify-between items-center ${t.boxEstudos} flex`;
+            document.getElementById('iconeGrafico').style.color = c.principal;
+            document.getElementById('iconePub').style.color = c.principal;
+            document.getElementById('iconeVid').style.color = c.principal;
+            document.getElementById('iconeRev').style.color = c.principal;
+            document.getElementById('iconeEstudos').style.color = c.principal;
 
-            document.getElementById('modalHeader').className = `${t.modalHeader} text-white p-4 flex justify-between items-center transition-colors`;
-            document.getElementById('btnSalvarDia').className = `w-1/2 ${t.btnSalvarDia} text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer`;
+            const boxEstudos = document.getElementById('boxEstudos');
+            boxEstudos.style.backgroundColor = c.fundo;
+            boxEstudos.style.borderColor = c.principal + '40';
+
+            document.getElementById('modalHeader').style.backgroundColor = c.principal;
+            document.getElementById('btnSalvarDia').style.backgroundColor = c.principal;
         }
 
         function popularSeletorMeses() {
@@ -567,7 +528,7 @@
 
             let totalDiasNoMes = new Date(ano, mes, 0).getDate();
             const diasSemanaNomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-            const t = paletas[temaAtual] || paletas.teal;
+            const c = (modoCor === 'padrao') ? paletasPadrao[temaPadrao] : coresCustom;
 
             for (let dia = 1; dia <= totalDiasNoMes; dia++) {
                 let dataDiaObj = new Date(ano, mes - 1, dia);
@@ -580,13 +541,22 @@
                 let temHoras = minDia > 0;
 
                 let div = document.createElement('div');
-                div.className = `border rounded-xl p-2 flex flex-col items-center justify-between cursor-pointer transition text-center ${temHoras ? `${t.cardDiaAtivo} shadow-xs` : 'bg-white border-slate-200 hover:bg-slate-100'}`;
+                div.className = `border rounded-xl p-2 flex flex-col items-center justify-between cursor-pointer transition text-center shadow-xs`;
+                
+                if (temHoras) {
+                    div.style.backgroundColor = c.fundo;
+                    div.style.borderColor = c.principal + '80';
+                } else {
+                    div.style.backgroundColor = '#ffffff';
+                    div.style.borderColor = '#e2e8f0';
+                }
+
                 div.onclick = () => abrirModalDia(dia, nomeDiaSemana);
 
                 div.innerHTML = `
                     <span class="text-[10px] font-bold text-slate-400 uppercase">${nomeDiaSemana}</span>
                     <span class="text-sm font-bold text-slate-700">${dia}</span>
-                    <span class="text-[10px] font-mono ${temHoras ? `${t.textoDiaAtivo} font-bold` : 'text-slate-400'}">${hD}h${mD > 0 ? mD+'m':''}</span>
+                    <span class="text-[10px] font-mono font-bold" style="color: ${temHoras ? c.texto : '#94a3b8'}">${hD}h${mD > 0 ? mD+'m':''}</span>
                 `;
                 grid.appendChild(div);
             }
@@ -672,7 +642,7 @@
                 emAndamento = true;
                 icone.className = "fa-solid fa-pause";
                 texto.innerText = "Pausar";
-                btn.className = "bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm";
+                btn.style.backgroundColor = '#d97706'; // Amarelo para pausar
 
                 timerInterval = setInterval(() => {
                     segundosCronometro++;
@@ -687,8 +657,8 @@
                 icone.className = "fa-solid fa-play";
                 texto.innerText = "Iniciar Campo Agora";
                 
-                const t = paletas[temaAtual] || paletas.teal;
-                btn.className = `${t.btnCronometro} text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm`;
+                const c = (modoCor === 'padrao') ? paletasPadrao[temaPadrao] : coresCustom;
+                btn.style.backgroundColor = c.principal;
 
                 let minutosTrabalhados = Math.round(segundosCronometro / 60);
                 if (minutosTrabalhados > 0) {
