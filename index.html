@@ -14,23 +14,23 @@
     <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col mb-4">
         
         <!-- Cabeçalho -->
-        <header class="bg-teal-700 text-white p-5 text-center">
+        <header id="appHeader" class="bg-teal-700 text-white p-5 text-center transition-colors">
             <h1 class="text-xl font-bold"><i class="fa-solid fa-clock mr-2"></i> Serviço de Campo</h1>
             <p id="mesAtualText" class="text-xs text-teal-200 mt-1 uppercase tracking-wider font-semibold"></p>
         </header>
 
         <!-- Frase Salmo 110:3 -->
-        <div class="bg-teal-50 border-b border-teal-100 p-3 text-center px-6">
-            <p class="text-xs italic text-teal-900 leading-relaxed font-serif">
+        <div id="bannerFrase" class="bg-teal-50 border-b border-teal-100 p-3 text-center px-6 transition-colors">
+            <p id="textoFrase" class="text-xs italic text-teal-900 leading-relaxed font-serif">
                 “Seu povo se apresentará voluntariamente no dia da sua força militar. Em esplêndida santidade, vindos do amanhecer”
             </p>
-            <span class="text-[10px] font-semibold text-teal-700 block mt-1 uppercase tracking-wider">— Salmo 110:3</span>
+            <span id="autorFrase" class="text-[10px] font-semibold text-teal-700 block mt-1 uppercase tracking-wider">— Salmo 110:3</span>
         </div>
 
         <!-- Corpo do App -->
         <main class="p-5 flex flex-col gap-5">
 
-            <!-- Identificação do Publicador, Congregação, Circuito, Meta e Seletor de Mês -->
+            <!-- Identificação do Publicador, Congregação, Circuito, Meta, Seletor de Mês e Tema -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Nome do Publicador</label>
@@ -67,13 +67,25 @@
                         </select>
                     </div>
                 </div>
+
+                <!-- Personalização de Tema / Paleta de Cores -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase"><i class="fa-solid fa-palette mr-1"></i> Tema de Cores</label>
+                    <select id="selectTema" onchange="alterarTema()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium">
+                        <option value="teal">Padrão (Verde Teal)</option>
+                        <option value="blue">Azul Oceano</option>
+                        <option value="purple">Roxo Imperial</option>
+                        <option value="slate">Grafite Elegante</option>
+                        <option value="rose">Vinho Quente</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Bloco do Cronômetro Rápido -->
-            <div class="bg-teal-50 border border-teal-100 rounded-xl p-4 text-center shadow-inner">
+            <div id="cardCronometro" class="bg-teal-50 border border-teal-100 rounded-xl p-4 text-center shadow-inner transition-colors">
                 <div class="flex flex-col items-center gap-0.5">
-                    <span class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Geral</span>
-                    <span class="text-[10px] text-teal-700 bg-teal-100/80 px-2 py-0.5 rounded-full font-medium">(Uso do cronômetro opcional)</span>
+                    <span id="subtituloCronometro" class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Geral</span>
+                    <span id="tagCronometro" class="text-[10px] text-teal-700 bg-teal-100/80 px-2 py-0.5 rounded-full font-medium">(Uso do cronômetro opcional)</span>
                 </div>
                 <div id="cronometroDisplay" class="text-4xl font-mono font-bold text-teal-900 my-2">00:00:00</div>
                 <button id="btnCronometro" onclick="alternarCronometro()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm">
@@ -85,7 +97,7 @@
             <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-3 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="bg-teal-100 text-teal-700 w-10 h-10 rounded-lg flex items-center justify-center text-lg">
+                        <div id="iconeHorasBg" class="bg-teal-100 text-teal-700 w-10 h-10 rounded-lg flex items-center justify-center text-lg transition-colors">
                             <i class="fa-solid fa-hourglass-half"></i>
                         </div>
                         <div>
@@ -113,7 +125,7 @@
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
                 <div class="flex items-center justify-between border-b border-slate-200 pb-2">
                     <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-days text-teal-600 text-sm"></i>
+                        <i id="iconeCalendario" class="fa-solid fa-calendar-days text-teal-600 text-sm"></i>
                         <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Calendário:</h3>
                         <span id="nomeMesCalendario" class="text-xs font-extrabold text-teal-800 bg-teal-100 px-2 py-0.5 rounded-md uppercase tracking-wide"></span>
                     </div>
@@ -127,23 +139,23 @@
 
             <!-- Totais Consolidados -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-2">
-                <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1"><i class="fa-solid fa-chart-pie text-teal-600 mr-1"></i> Totais do Mês</h3>
+                <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1"><i id="iconeGrafico" class="fa-solid fa-chart-pie text-teal-600 mr-1"></i> Totais do Mês</h3>
                 <div class="grid grid-cols-2 gap-2 text-sm">
                     <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-book-open text-teal-600 mr-1"></i> Publicações</span>
+                        <span class="text-slate-500 text-xs"><i id="iconePub" class="fa-solid fa-book-open text-teal-600 mr-1"></i> Publicações</span>
                         <span id="totalPub" class="font-bold">0</span>
                     </div>
                     <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-video text-teal-600 mr-1"></i> Vídeos</span>
+                        <span class="text-slate-500 text-xs"><i id="iconeVid" class="fa-solid fa-video text-teal-600 mr-1"></i> Vídeos</span>
                         <span id="totalVid" class="font-bold">0</span>
                     </div>
                     <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-rotate-right text-teal-600 mr-1"></i> Revisitas</span>
+                        <span class="text-slate-500 text-xs"><i id="iconeRev" class="fa-solid fa-rotate-right text-teal-600 mr-1"></i> Revisitas</span>
                         <span id="totalRev" class="font-bold">0</span>
                     </div>
                     <!-- Estudos Ativos -->
-                    <div class="bg-white p-2 rounded-lg border border-teal-200 flex justify-between items-center bg-teal-50/50">
-                        <span class="text-slate-700 text-xs font-semibold"><i class="fa-solid fa-users text-teal-600 mr-1"></i> Estudos Ativos</span>
+                    <div id="boxEstudos" class="bg-white p-2 rounded-lg border border-teal-200 flex justify-between items-center bg-teal-50/50">
+                        <span class="text-slate-700 text-xs font-semibold"><i id="iconeEstudos" class="fa-solid fa-users text-teal-600 mr-1"></i> Estudos Ativos</span>
                         <input type="number" id="inputEstudosAtivos" min="0" oninput="salvarEstudosAtivos()" class="w-12 bg-white border border-teal-300 rounded px-1.5 py-0.5 text-center text-xs font-bold text-teal-800 focus:outline-none focus:ring-1 focus:ring-teal-500" value="0">
                     </div>
                 </div>
@@ -166,9 +178,9 @@
     <div id="modalDia" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 hidden z-50">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
             <!-- Cabeçalho Modal -->
-            <div class="bg-teal-700 text-white p-4 flex justify-between items-center">
+            <div id="modalHeader" class="bg-teal-700 text-white p-4 flex justify-between items-center transition-colors">
                 <h3 id="modalTituloData" class="font-bold text-base">Editar Dia</h3>
-                <button onclick="fecharModalDia()" class="text-teal-200 hover:text-white cursor-pointer text-lg"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="fecharModalDia()" class="text-white/80 hover:text-white cursor-pointer text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <!-- Corpo Modal -->
@@ -239,28 +251,147 @@
             <!-- Rodapé Modal -->
             <div class="bg-slate-50 p-4 border-t border-slate-200 flex gap-2">
                 <button onclick="fecharModalDia()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Cancelar</button>
-                <button onclick="salvarDadosDia()" class="w-1/2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Salvar Dia</button>
+                <button id="btnSalvarDia" onclick="salvarDadosDia()" class="w-1/2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Salvar Dia</button>
             </div>
         </div>
     </div>
 
     <!-- Script de Lógica -->
     <script>
+        const paletas = {
+            teal: {
+                header: 'bg-teal-700',
+                headerSub: 'text-teal-200',
+                banner: 'bg-teal-50 border-teal-100',
+                bannerTexto: 'text-teal-900',
+                bannerAutor: 'text-teal-700',
+                cronometroCard: 'bg-teal-50 border-teal-100',
+                cronometroSub: 'text-teal-600',
+                cronometroTag: 'text-teal-700 bg-teal-100/80',
+                cronometroNum: 'text-teal-900',
+                btnCronometro: 'bg-teal-600 hover:bg-teal-700',
+                iconeHorasBg: 'bg-teal-100 text-teal-700',
+                porcentagemText: 'text-teal-600',
+                barraProgresso: 'bg-teal-600',
+                icones: 'text-teal-600',
+                mesAnoSelect: 'text-teal-800',
+                badgeMes: 'text-teal-800 bg-teal-100',
+                cardDiaAtivo: 'bg-teal-50 border-teal-300',
+                textoDiaAtivo: 'text-teal-700',
+                boxEstudos: 'border-teal-200 bg-teal-50/50',
+                modalHeader: 'bg-teal-700',
+                btnSalvarDia: 'bg-teal-600 hover:bg-teal-700'
+            },
+            blue: {
+                header: 'bg-blue-700',
+                headerSub: 'text-blue-200',
+                banner: 'bg-blue-50 border-blue-100',
+                bannerTexto: 'text-blue-900',
+                bannerAutor: 'text-blue-700',
+                cronometroCard: 'bg-blue-50 border-blue-100',
+                cronometroSub: 'text-blue-600',
+                cronometroTag: 'text-blue-700 bg-blue-100/80',
+                cronometroNum: 'text-blue-900',
+                btnCronometro: 'bg-blue-600 hover:bg-blue-700',
+                iconeHorasBg: 'bg-blue-100 text-blue-700',
+                porcentagemText: 'text-blue-600',
+                barraProgresso: 'bg-blue-600',
+                icones: 'text-blue-600',
+                mesAnoSelect: 'text-blue-800',
+                badgeMes: 'text-blue-800 bg-blue-100',
+                cardDiaAtivo: 'bg-blue-50 border-blue-300',
+                textoDiaAtivo: 'text-blue-700',
+                boxEstudos: 'border-blue-200 bg-blue-50/50',
+                modalHeader: 'bg-blue-700',
+                btnSalvarDia: 'bg-blue-600 hover:bg-blue-700'
+            },
+            purple: {
+                header: 'bg-purple-700',
+                headerSub: 'text-purple-200',
+                banner: 'bg-purple-50 border-purple-100',
+                bannerTexto: 'text-purple-900',
+                bannerAutor: 'text-purple-700',
+                cronometroCard: 'bg-purple-50 border-purple-100',
+                cronometroSub: 'text-purple-600',
+                cronometroTag: 'text-purple-700 bg-purple-100/80',
+                cronometroNum: 'text-purple-900',
+                btnCronometro: 'bg-purple-600 hover:bg-purple-700',
+                iconeHorasBg: 'bg-purple-100 text-purple-700',
+                porcentagemText: 'text-purple-600',
+                barraProgresso: 'bg-purple-600',
+                icones: 'text-purple-600',
+                mesAnoSelect: 'text-purple-800',
+                badgeMes: 'text-purple-800 bg-purple-100',
+                cardDiaAtivo: 'bg-purple-50 border-purple-300',
+                textoDiaAtivo: 'text-purple-700',
+                boxEstudos: 'border-purple-200 bg-purple-50/50',
+                modalHeader: 'bg-purple-700',
+                btnSalvarDia: 'bg-purple-600 hover:bg-purple-700'
+            },
+            slate: {
+                header: 'bg-slate-800',
+                headerSub: 'text-slate-300',
+                banner: 'bg-slate-100 border-slate-200',
+                bannerTexto: 'text-slate-900',
+                bannerAutor: 'text-slate-700',
+                cronometroCard: 'bg-slate-100 border-slate-200',
+                cronometroSub: 'text-slate-600',
+                cronometroTag: 'text-slate-700 bg-slate-200',
+                cronometroNum: 'text-slate-900',
+                btnCronometro: 'bg-slate-700 hover:bg-slate-800',
+                iconeHorasBg: 'bg-slate-200 text-slate-800',
+                porcentagemText: 'text-slate-700',
+                barraProgresso: 'bg-slate-700',
+                icones: 'text-slate-700',
+                mesAnoSelect: 'text-slate-800',
+                badgeMes: 'text-slate-800 bg-slate-200',
+                cardDiaAtivo: 'bg-slate-100 border-slate-400',
+                textoDiaAtivo: 'text-slate-800',
+                boxEstudos: 'border-slate-300 bg-slate-100/60',
+                modalHeader: 'bg-slate-800',
+                btnSalvarDia: 'bg-slate-700 hover:bg-slate-800'
+            },
+            rose: {
+                header: 'bg-rose-800',
+                headerSub: 'text-rose-200',
+                banner: 'bg-rose-50 border-rose-100',
+                bannerTexto: 'text-rose-950',
+                bannerAutor: 'text-rose-800',
+                cronometroCard: 'bg-rose-50 border-rose-100',
+                cronometroSub: 'text-rose-700',
+                cronometroTag: 'text-rose-800 bg-rose-100/80',
+                cronometroNum: 'text-rose-950',
+                btnCronometro: 'bg-rose-700 hover:bg-rose-800',
+                iconeHorasBg: 'bg-rose-100 text-rose-800',
+                porcentagemText: 'text-rose-700',
+                barraProgresso: 'bg-rose-700',
+                icones: 'text-rose-700',
+                mesAnoSelect: 'text-rose-900',
+                badgeMes: 'text-rose-900 bg-rose-100',
+                cardDiaAtivo: 'bg-rose-50 border-rose-300',
+                textoDiaAtivo: 'text-rose-800',
+                boxEstudos: 'border-rose-200 bg-rose-50/50',
+                modalHeader: 'bg-rose-800',
+                btnSalvarDia: 'bg-rose-700 hover:bg-rose-800'
+            }
+        };
+
         const dataRealAtual = new Date();
         const anoAtual = dataRealAtual.getFullYear();
-        const mesRealAtualIndex = dataRealAtual.getMonth(); // 0 a 11
+        const mesRealAtualIndex = dataRealAtual.getMonth();
         const mesRealString = `${anoAtual}-${String(mesRealAtualIndex + 1).padStart(2, '0')}`;
 
         let anoMesSelecionado = mesRealString;
         let diaEditandoAtual = null;
+        let temaAtual = localStorage.getItem('publicador_tema') || 'teal';
 
         popularSeletorMeses();
 
-        // Carregar Nome, Congregação, Circuito e Meta Salvos
         document.getElementById('inputNome').value = localStorage.getItem('publicador_nome') || '';
         document.getElementById('inputCongregacao').value = localStorage.getItem('publicador_congregacao') || '';
         document.getElementById('inputCircuito').value = localStorage.getItem('publicador_circuito') || '';
         document.getElementById('selectMeta').value = localStorage.getItem('publicador_meta') || '0';
+        document.getElementById('selectTema').value = temaAtual;
 
         let dadosMes = carregarDadosDoMes(anoMesSelecionado);
 
@@ -268,7 +399,54 @@
         let timerInterval = null;
         let emAndamento = false;
 
+        aplicarTema(temaAtual);
         atualizarInterface();
+
+        function alterarTema() {
+            temaAtual = document.getElementById('selectTema').value;
+            localStorage.setItem('publicador_tema', temaAtual);
+            aplicarTema(temaAtual);
+            atualizarInterface();
+        }
+
+        function aplicarTema(temaKey) {
+            const t = paletas[temaKey] || paletas.teal;
+
+            document.getElementById('appHeader').className = `${t.header} text-white p-5 text-center transition-colors`;
+            document.getElementById('mesAtualText').className = `text-xs ${t.headerSub} mt-1 uppercase tracking-wider font-semibold`;
+
+            document.getElementById('bannerFrase').className = `${t.banner} border-b p-3 text-center px-6 transition-colors`;
+            document.getElementById('textoFrase').className = `text-xs italic ${t.bannerTexto} leading-relaxed font-serif`;
+            document.getElementById('autorFrase').className = `text-[10px] font-semibold ${t.bannerAutor} block mt-1 uppercase tracking-wider`;
+
+            document.getElementById('selectMesAno').className = `w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium ${t.mesAnoSelect}`;
+
+            document.getElementById('cardCronometro').className = `${t.cronometroCard} border rounded-xl p-4 text-center shadow-inner transition-colors`;
+            document.getElementById('subtituloCronometro').className = `text-xs ${t.cronometroSub} font-semibold uppercase tracking-wide`;
+            document.getElementById('tagCronometro').className = `text-[10px] ${t.cronometroTag} px-2 py-0.5 rounded-full font-medium`;
+            document.getElementById('cronometroDisplay').className = `text-4xl font-mono font-bold ${t.cronometroNum} my-2`;
+
+            if (!emAndamento) {
+                document.getElementById('btnCronometro').className = `${t.btnCronometro} text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm`;
+            }
+
+            document.getElementById('iconeHorasBg').className = `${t.iconeHorasBg} w-10 h-10 rounded-lg flex items-center justify-center text-lg transition-colors`;
+            document.getElementById('porcentagemMeta').className = `text-sm font-bold ${t.porcentagemText}`;
+            document.getElementById('barraProgresso').className = `${t.barraProgresso} h-2.5 rounded-full transition-all duration-300`;
+
+            document.getElementById('nomeMesCalendario').className = `text-xs font-extrabold ${t.badgeMes} px-2 py-0.5 rounded-md uppercase tracking-wide`;
+            document.getElementById('iconeCalendario').className = `fa-solid fa-calendar-days ${t.icones} text-sm`;
+
+            document.getElementById('iconeGrafico').className = `fa-solid fa-chart-pie ${t.icones} mr-1`;
+            document.getElementById('iconePub').className = `fa-solid fa-book-open ${t.icones} mr-1`;
+            document.getElementById('iconeVid').className = `fa-solid fa-video ${t.icones} mr-1`;
+            document.getElementById('iconeRev').className = `fa-solid fa-rotate-right ${t.icones} mr-1`;
+            document.getElementById('iconeEstudos').className = `fa-solid fa-users ${t.icones} mr-1`;
+            document.getElementById('boxEstudos').className = `bg-white p-2 rounded-lg border justify-between items-center ${t.boxEstudos} flex`;
+
+            document.getElementById('modalHeader').className = `${t.modalHeader} text-white p-4 flex justify-between items-center transition-colors`;
+            document.getElementById('btnSalvarDia').className = `w-1/2 ${t.btnSalvarDia} text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer`;
+        }
 
         function popularSeletorMeses() {
             const select = document.getElementById('selectMesAno');
@@ -333,8 +511,6 @@
             let nomeMesExtenso = dataObj.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
             
             document.getElementById('mesAtualText').innerText = nomeMesExtenso;
-            
-            // Atualiza o destaque do mês no Calendário
             document.getElementById('nomeMesCalendario').innerText = dataObj.toLocaleString('pt-BR', { month: 'long' });
 
             let totalMinutosGerais = 0;
@@ -371,7 +547,6 @@
                 textoPorcentagem.innerText = `${progresso}%`;
                 barra.style.width = `${progresso}%`;
 
-                // Exibe a mensagem caso atinja ou ultrapasse a meta
                 if (totalMinutosGerais >= metaHoras * 60) {
                     msgMeta.classList.remove('hidden');
                 } else {
@@ -392,6 +567,7 @@
 
             let totalDiasNoMes = new Date(ano, mes, 0).getDate();
             const diasSemanaNomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            const t = paletas[temaAtual] || paletas.teal;
 
             for (let dia = 1; dia <= totalDiasNoMes; dia++) {
                 let dataDiaObj = new Date(ano, mes - 1, dia);
@@ -404,13 +580,13 @@
                 let temHoras = minDia > 0;
 
                 let div = document.createElement('div');
-                div.className = `border rounded-xl p-2 flex flex-col items-center justify-between cursor-pointer transition text-center ${temHoras ? 'bg-teal-50 border-teal-300 shadow-xs' : 'bg-white border-slate-200 hover:bg-slate-100'}`;
+                div.className = `border rounded-xl p-2 flex flex-col items-center justify-between cursor-pointer transition text-center ${temHoras ? `${t.cardDiaAtivo} shadow-xs` : 'bg-white border-slate-200 hover:bg-slate-100'}`;
                 div.onclick = () => abrirModalDia(dia, nomeDiaSemana);
 
                 div.innerHTML = `
                     <span class="text-[10px] font-bold text-slate-400 uppercase">${nomeDiaSemana}</span>
                     <span class="text-sm font-bold text-slate-700">${dia}</span>
-                    <span class="text-[10px] font-mono ${temHoras ? 'text-teal-700 font-bold' : 'text-slate-400'}">${hD}h${mD > 0 ? mD+'m':''}</span>
+                    <span class="text-[10px] font-mono ${temHoras ? `${t.textoDiaAtivo} font-bold` : 'text-slate-400'}">${hD}h${mD > 0 ? mD+'m':''}</span>
                 `;
                 grid.appendChild(div);
             }
@@ -496,8 +672,7 @@
                 emAndamento = true;
                 icone.className = "fa-solid fa-pause";
                 texto.innerText = "Pausar";
-                btn.classList.remove('bg-teal-600', 'hover:bg-teal-700');
-                btn.classList.add('bg-amber-600', 'hover:bg-amber-700');
+                btn.className = "bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm";
 
                 timerInterval = setInterval(() => {
                     segundosCronometro++;
@@ -511,8 +686,9 @@
                 emAndamento = false;
                 icone.className = "fa-solid fa-play";
                 texto.innerText = "Iniciar Campo Agora";
-                btn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
-                btn.classList.add('bg-teal-600', 'hover:bg-teal-700');
+                
+                const t = paletas[temaAtual] || paletas.teal;
+                btn.className = `${t.btnCronometro} text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm`;
 
                 let minutosTrabalhados = Math.round(segundosCronometro / 60);
                 if (minutosTrabalhados > 0) {
