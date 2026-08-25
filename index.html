@@ -117,9 +117,10 @@
                         <span class="text-slate-500 text-xs"><i class="fa-solid fa-rotate-right text-teal-600 mr-1"></i> Revisitas</span>
                         <span id="totalRev" class="font-bold">0</span>
                     </div>
-                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                        <span class="text-slate-500 text-xs"><i class="fa-solid fa-users text-teal-600 mr-1"></i> Estudos</span>
-                        <span id="totalEst" class="font-bold">0</span>
+                    <!-- Estudos Ativos (Editável diretamente na Home) -->
+                    <div class="bg-white p-2 rounded-lg border border-teal-200 flex justify-between items-center bg-teal-50/50">
+                        <span class="text-slate-700 text-xs font-semibold"><i class="fa-solid fa-users text-teal-600 mr-1"></i> Estudos Ativos</span>
+                        <input type="number" id="inputEstudosAtivos" min="0" oninput="salvarEstudosAtivos()" class="w-12 bg-white border border-teal-300 rounded px-1.5 py-0.5 text-center text-xs font-bold text-teal-800 focus:outline-none focus:ring-1 focus:ring-teal-500" value="0">
                     </div>
                 </div>
             </div>
@@ -191,25 +192,21 @@
                     </div>
                 </div>
 
-                <!-- Atividades do Dia -->
+                <!-- Atividades do Dia (Item Estudos Removido) -->
                 <div class="flex flex-col gap-2">
                     <label class="text-xs font-bold text-slate-600 uppercase">Atividades Realizadas</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
-                            <span class="text-xs text-slate-600">Publicações</span>
-                            <input type="number" id="modalPub" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col items-center gap-1">
+                            <span class="text-[11px] text-slate-600 font-medium">Publicações</span>
+                            <input type="number" id="modalPub" min="0" class="w-full bg-white border border-slate-300 rounded px-1 py-1 text-center text-xs font-bold" value="0">
                         </div>
-                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
-                            <span class="text-xs text-slate-600">Vídeos</span>
-                            <input type="number" id="modalVid" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col items-center gap-1">
+                            <span class="text-[11px] text-slate-600 font-medium">Vídeos</span>
+                            <input type="number" id="modalVid" min="0" class="w-full bg-white border border-slate-300 rounded px-1 py-1 text-center text-xs font-bold" value="0">
                         </div>
-                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
-                            <span class="text-xs text-slate-600">Revisitas</span>
-                            <input type="number" id="modalRev" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
-                        </div>
-                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex items-center justify-between">
-                            <span class="text-xs text-slate-600">Estudos</span>
-                            <input type="number" id="modalEst" min="0" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-center text-xs font-bold" value="0">
+                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col items-center gap-1">
+                            <span class="text-[11px] text-slate-600 font-medium">Revisitas</span>
+                            <input type="number" id="modalRev" min="0" class="w-full bg-white border border-slate-300 rounded px-1 py-1 text-center text-xs font-bold" value="0">
                         </div>
                     </div>
                 </div>
@@ -280,7 +277,7 @@
         function carregarDadosDoMes(mesAno) {
             let salvo = JSON.parse(localStorage.getItem(`relatorio_dias_${mesAno}`));
             if (salvo) return salvo;
-            return { dias: {} };
+            return { dias: {}, estudosAtivos: 0 };
         }
 
         function salvarDadosLocalStorage() {
@@ -294,6 +291,12 @@
         function alterarMeta() {
             localStorage.setItem('publicador_meta', document.getElementById('selectMeta').value);
             atualizarInterface();
+        }
+
+        function salvarEstudosAtivos() {
+            let val = parseInt(document.getElementById('inputEstudosAtivos').value) || 0;
+            dadosMes.estudosAtivos = val;
+            salvarDadosLocalStorage();
         }
 
         function atualizarInterface() {
@@ -310,7 +313,6 @@
             let totalPub = 0;
             let totalVid = 0;
             let totalRev = 0;
-            let totalEst = 0;
 
             for (let d in dadosMes.dias) {
                 let item = dadosMes.dias[d];
@@ -318,7 +320,6 @@
                 totalPub += (item.pub || 0);
                 totalVid += (item.vid || 0);
                 totalRev += (item.rev || 0);
-                totalEst += (item.est || 0);
             }
 
             let horas = Math.floor(totalMinutosGerais / 60);
@@ -328,7 +329,7 @@
             document.getElementById('totalPub').innerText = totalPub;
             document.getElementById('totalVid').innerText = totalVid;
             document.getElementById('totalRev').innerText = totalRev;
-            document.getElementById('totalEst').innerText = totalEst;
+            document.getElementById('inputEstudosAtivos').value = dadosMes.estudosAtivos || 0;
 
             const metaHoras = parseInt(document.getElementById('selectMeta').value);
             const containerBarra = document.getElementById('containerBarraMeta');
@@ -383,7 +384,7 @@
             let [ano, mes] = anoMesSelecionado.split('-');
             document.getElementById('modalTituloData').innerText = `Dia ${dia} de ${new Date(ano, mes-1, dia).toLocaleString('pt-BR', { month: 'long' })} (${nomeDiaSemana})`;
 
-            let dadosDoDia = dadosMes.dias[dia] || { minutos: 0, casa: 0, carrinho: 0, display: 0, cartas: 0, estudo: 0, outros: 0, pub: 0, vid: 0, rev: 0, est: 0 };
+            let dadosDoDia = dadosMes.dias[dia] || { minutos: 0, casa: 0, carrinho: 0, display: 0, cartas: 0, estudo: 0, outros: 0, pub: 0, vid: 0, rev: 0 };
 
             document.getElementById('modalHoras').value = Math.floor((dadosDoDia.minutos || 0) / 60);
             document.getElementById('modalMinutos').value = (dadosDoDia.minutos || 0) % 60;
@@ -398,7 +399,6 @@
             document.getElementById('modalPub').value = dadosDoDia.pub || 0;
             document.getElementById('modalVid').value = dadosDoDia.vid || 0;
             document.getElementById('modalRev').value = dadosDoDia.rev || 0;
-            document.getElementById('modalEst').value = dadosDoDia.est || 0;
 
             document.getElementById('modalDia').classList.remove('hidden');
         }
@@ -444,12 +444,11 @@
             let pub = parseInt(document.getElementById('modalPub').value) || 0;
             let vid = parseInt(document.getElementById('modalVid').value) || 0;
             let rev = parseInt(document.getElementById('modalRev').value) || 0;
-            let est = parseInt(document.getElementById('modalEst').value) || 0;
 
             dadosMes.dias[diaEditandoAtual] = {
                 minutos: minutosTotal,
                 casa, carrinho, display, cartas, estudo, outros,
-                pub, vid, rev, est
+                pub, vid, rev
             };
 
             salvarDadosLocalStorage();
@@ -489,7 +488,7 @@
                     let hojeStr = String(dataRealAtual.getDate());
                     if (anoMesSelecionado === mesRealString) {
                         if (!dadosMes.dias[hojeStr]) {
-                            dadosMes.dias[hojeStr] = { minutos: 0, pub: 0, vid: 0, rev: 0, est: 0 };
+                            dadosMes.dias[hojeStr] = { minutos: 0, pub: 0, vid: 0, rev: 0 };
                         }
                         dadosMes.dias[hojeStr].minutos = (dadosMes.dias[hojeStr].minutos || 0) + minutosTrabalhados;
                         salvarDadosLocalStorage();
@@ -516,7 +515,6 @@
             let totalPub = 0;
             let totalVid = 0;
             let totalRev = 0;
-            let totalEst = 0;
 
             for (let d in dadosMes.dias) {
                 let item = dadosMes.dias[d];
@@ -524,12 +522,13 @@
                 totalPub += (item.pub || 0);
                 totalVid += (item.vid || 0);
                 totalRev += (item.rev || 0);
-                totalEst += (item.est || 0);
             }
 
             let horas = Math.floor(totalMinutosGerais / 60);
             let mins = totalMinutosGerais % 60;
             let horasTexto = `${horas}h ${mins}min`;
+
+            let estudosAtivos = dadosMes.estudosAtivos || 0;
 
             let textoMensagem = `*Relatório de Serviço - ${nomeMesFormatado}*\n` +
                                 cabecalhoNome +
@@ -538,7 +537,7 @@
                                 `📄 *Publicações:* ${totalPub}\n` +
                                 `🎬 *Vídeos:* ${totalVid}\n` +
                                 `🔄 *Revisitas:* ${totalRev}\n` +
-                                `📖 *Estudos Bíblicos:* ${totalEst}`;
+                                `📖 *Estudos Bíblicos Ativos:* ${estudosAtivos}`;
 
             let urlWp = `https://wa.me/?text=${encodeURIComponent(textoMensagem)}`;
             window.open(urlWp, '_blank');
