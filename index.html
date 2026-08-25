@@ -30,12 +30,25 @@
         <!-- Corpo do App -->
         <main class="p-5 flex flex-col gap-5">
 
-            <!-- Identificação do Publicador, Meta e Seletor de Mês -->
+            <!-- Identificação do Publicador, Congregação, Circuito, Meta e Seletor de Mês -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Nome do Publicador</label>
-                    <input type="text" id="inputNome" placeholder="Seu nome" oninput="salvarNome()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <input type="text" id="inputNome" placeholder="Seu nome" oninput="salvarDadosPerfil()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
                 </div>
+
+                <!-- Novos campos: Congregação e Circuito -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Congregação</label>
+                        <input type="text" id="inputCongregacao" placeholder="Nome da congregação" oninput="salvarDadosPerfil()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Circuito</label>
+                        <input type="text" id="inputCircuito" placeholder="Ex: SP-12" oninput="salvarDadosPerfil()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Meta de Serviço</label>
@@ -57,7 +70,11 @@
 
             <!-- Bloco do Cronômetro Rápido -->
             <div class="bg-teal-50 border border-teal-100 rounded-xl p-4 text-center shadow-inner">
-                <span class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Geral</span>
+                <div class="flex flex-col items-center gap-0.5">
+                    <span class="text-xs text-teal-600 font-semibold uppercase tracking-wide">Cronômetro Geral</span>
+                    <!-- Aviso de uso opcional -->
+                    <span class="text-[10px] text-teal-700 bg-teal-100/80 px-2 py-0.5 rounded-full font-medium">(Uso do cronômetro opcional)</span>
+                </div>
                 <div id="cronometroDisplay" class="text-4xl font-mono font-bold text-teal-900 my-2">00:00:00</div>
                 <button id="btnCronometro" onclick="alternarCronometro()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-5 py-2 rounded-full shadow transition flex items-center justify-center gap-2 mx-auto cursor-pointer text-sm">
                     <i id="iconePlayPause" class="fa-solid fa-play"></i> <span id="textoBotaoCronometro">Iniciar Campo Agora</span>
@@ -192,7 +209,7 @@
                     </div>
                 </div>
 
-                <!-- Atividades do Dia (Item Estudos Removido) -->
+                <!-- Atividades do Dia -->
                 <div class="flex flex-col gap-2">
                     <label class="text-xs font-bold text-slate-600 uppercase">Atividades Realizadas</label>
                     <div class="grid grid-cols-3 gap-2">
@@ -232,8 +249,10 @@
 
         popularSeletorMeses();
 
-        // Carregar Nome e Meta Salvos
+        // Carregar Nome, Congregação, Circuito e Meta Salvos
         document.getElementById('inputNome').value = localStorage.getItem('publicador_nome') || '';
+        document.getElementById('inputCongregacao').value = localStorage.getItem('publicador_congregacao') || '';
+        document.getElementById('inputCircuito').value = localStorage.getItem('publicador_circuito') || '';
         document.getElementById('selectMeta').value = localStorage.getItem('publicador_meta') || '0';
 
         let dadosMes = carregarDadosDoMes(anoMesSelecionado);
@@ -284,8 +303,10 @@
             localStorage.setItem(`relatorio_dias_${anoMesSelecionado}`, JSON.stringify(dadosMes));
         }
 
-        function salvarNome() {
+        function salvarDadosPerfil() {
             localStorage.setItem('publicador_nome', document.getElementById('inputNome').value);
+            localStorage.setItem('publicador_congregacao', document.getElementById('inputCongregacao').value);
+            localStorage.setItem('publicador_circuito', document.getElementById('inputCircuito').value);
         }
 
         function alterarMeta() {
@@ -505,7 +526,13 @@
 
         function enviarWhatsApp() {
             let nomePublicador = document.getElementById('inputNome').value.trim();
-            let cabecalhoNome = nomePublicador ? `*Publicador:* ${nomePublicador}\n` : '';
+            let congregacao = document.getElementById('inputCongregacao').value.trim();
+            let circuito = document.getElementById('inputCircuito').value.trim();
+
+            let cabecalho = '';
+            if (nomePublicador) cabecalho += `👤 *Publicador:* ${nomePublicador}\n`;
+            if (congregacao) cabecalho += `🏛️ *Congregação:* ${congregacao}\n`;
+            if (circuito) cabecalho += `📍 *Circuito:* ${circuito}\n`;
 
             let [ano, mes] = anoMesSelecionado.split('-');
             let dataObj = new Date(ano, mes - 1, 1);
@@ -531,8 +558,7 @@
             let estudosAtivos = dadosMes.estudosAtivos || 0;
 
             let textoMensagem = `*Relatório de Serviço - ${nomeMesFormatado}*\n` +
-                                cabecalhoNome +
-                                `\n` +
+                                (cabecalho ? `${cabecalho}\n` : '\n') +
                                 `⏱️ *Horas:* ${horasTexto}\n` +
                                 `📄 *Publicações:* ${totalPub}\n` +
                                 `🎬 *Vídeos:* ${totalVid}\n` +
