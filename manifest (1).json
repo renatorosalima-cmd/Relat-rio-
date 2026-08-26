@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Meu Campo",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Meu campo",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "Meucampo",
+  "description": "Relatorio de serviços TJ"
+}
