@@ -39,7 +39,7 @@
         <!-- Corpo do App -->
         <main class="p-5 flex flex-col gap-5">
 
-            <!-- Identificação do Publicador, Congregação, Circuito, Meta e Seletor de Mês -->
+            <!-- Identificação do Publicador, Congregação, Circuito, Meta e Seletor de Mês/Ano -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Nome do Publicador</label>
@@ -58,7 +58,8 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
+                <!-- Meta e Seletores de Mês e Ano -->
+                <div class="flex flex-col gap-2">
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Meta de Serviço</label>
                         <select id="selectMeta" onchange="alterarMeta()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
@@ -69,11 +70,31 @@
                             <option value="100">Especial (100h)</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Mês de Referência</label>
-                        <select id="selectMesAno" onchange="mudarMesSelecionado()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium text-teal-800">
-                            <!-- Preenchido via JavaScript -->
-                        </select>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Mês</label>
+                            <select id="selectMes" onchange="mudarDataSelecionada()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium text-teal-800">
+                                <option value="01">Janeiro</option>
+                                <option value="02">Fevereiro</option>
+                                <option value="03">Março</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Maio</option>
+                                <option value="06">Junho</option>
+                                <option value="07">Julho</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">Ano</label>
+                            <select id="selectAno" onchange="mudarDataSelecionada()" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium text-teal-800">
+                                <!-- Preenchido via JS -->
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -158,10 +179,15 @@
                 </div>
             </div>
 
-            <!-- MENU DISCRETO PARA ABRIR A TELA DE PERSONALIZAÇÃO -->
-            <button onclick="abrirTelaPersonalizacao()" class="w-full text-center text-xs text-slate-500 hover:text-slate-700 py-2 border-t border-slate-100 flex items-center justify-center gap-2 cursor-pointer transition">
-                <i class="fa-solid fa-palette text-slate-400"></i> Personalização do aplicativo
-            </button>
+            <!-- BOTÕES DE OPÇÕES DO MENU INFERIOR -->
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                <button onclick="abrirTelaPersonalizacao()" class="text-center text-xs text-slate-600 hover:text-slate-800 py-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition font-medium">
+                    <i class="fa-solid fa-palette text-slate-400"></i> Personalização
+                </button>
+                <button onclick="abrirTelaSobre()" class="text-center text-xs text-slate-600 hover:text-slate-800 py-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition font-medium">
+                    <i class="fa-solid fa-circle-info text-teal-600"></i> Sobre e Apoiar
+                </button>
+            </div>
 
             <!-- Botão de Enviar WhatsApp -->
             <button onclick="enviarWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold p-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-1">
@@ -176,9 +202,8 @@
         </footer>
     </div>
 
-    <!-- TELA/PÁGINA DE PERSONALIZAÇÃO DO APLICATIVO (OCULTA POR PADRÃO) -->
+    <!-- TELA DE PERSONALIZAÇÃO -->
     <div id="telaPersonalizacao" class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden hidden flex-col mb-4">
-        <!-- Cabeçalho da Tela de Personalização -->
         <header id="headerPersonalizacao" class="bg-teal-700 text-white p-4 flex items-center justify-between transition-colors">
             <button onclick="fecharTelaPersonalizacao()" class="text-white hover:text-slate-200 text-sm flex items-center gap-1 cursor-pointer font-medium">
                 <i class="fa-solid fa-arrow-left"></i> Voltar
@@ -193,7 +218,7 @@
                     Escolha as cores de preferência para personalizar os botões, títulos e fundos do aplicativo:
                 </p>
 
-                <!-- Modos: Padrão vs Personalizado (Gradiente) -->
+                <!-- Modos: Padrão vs Personalizado -->
                 <div class="flex bg-slate-200 p-1 rounded-lg text-xs font-semibold">
                     <button id="btnModoPadrao" onclick="alternarModoCor('padrao')" class="w-1/2 py-1.5 rounded-md transition text-slate-700 bg-white shadow-xs">Padrão</button>
                     <button id="btnModoCustom" onclick="alternarModoCor('custom')" class="w-1/2 py-1.5 rounded-md transition text-slate-600 hover:text-slate-800">Personalizado (Gradiente)</button>
@@ -211,17 +236,15 @@
                     </div>
                 </div>
 
-                <!-- Modo Personalizado (Barra Gradiente Interativa) -->
+                <!-- Modo Personalizado (Gradiente) -->
                 <div id="painelModoCustom" class="hidden flex-col gap-3 bg-white p-3 rounded-lg border border-slate-300">
                     <div>
                         <span class="text-xs text-slate-600 font-semibold block mb-1">Arraste/clique na barra para escolher qualquer cor:</span>
-                        <!-- Barra Gradiente Espectro -->
                         <div id="barraGradiente" onclick="selecionarCorDoGradiente(event)" class="gradient-bar h-10 rounded-lg cursor-pointer shadow-inner relative border border-slate-300 flex items-center justify-center">
                             <span class="text-[10px] text-white font-bold drop-shadow-md pointer-events-none uppercase tracking-wider"><i class="fa-solid fa-hand-pointer mr-1"></i> Clique para escolher a cor</span>
                         </div>
                     </div>
 
-                    <!-- Seletores Manuais Secundários -->
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-center">
                         <div class="flex flex-col items-center gap-1">
                             <span class="text-[10px] text-slate-500 font-bold uppercase">Principal</span>
@@ -239,9 +262,57 @@
                 </div>
             </div>
 
-            <!-- Botão Concluir -->
             <button onclick="fecharTelaPersonalizacao()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold p-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
                 Concluir e Salvar
+            </button>
+        </main>
+    </div>
+
+    <!-- TELA SOBRE E INFORMAÇÕES DO PIX -->
+    <div id="telaSobre" class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden hidden flex-col mb-4">
+        <header id="headerSobre" class="bg-teal-700 text-white p-4 flex items-center justify-between transition-colors">
+            <button onclick="fecharTelaSobre()" class="text-white hover:text-slate-200 text-sm flex items-center gap-1 cursor-pointer font-medium">
+                <i class="fa-solid fa-arrow-left"></i> Voltar
+            </button>
+            <h2 class="font-bold text-base">Sobre o Aplicativo</h2>
+            <div class="w-12"></div>
+        </header>
+
+        <main class="p-5 flex flex-col gap-4">
+            <!-- Apresentação do Projeto -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center flex flex-col gap-2">
+                <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center text-xl mx-auto mb-1">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+                <h3 class="font-bold text-slate-800 text-sm">Feito para os Publicadores</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Este aplicativo foi desenvolvido com o objetivo de facilitar as marcações e a organização do serviço de campo dos publicadores, de forma <strong>100% gratuita</strong> e sem anúncios.
+                </p>
+            </div>
+
+            <!-- Card de Apoio com Pix -->
+            <div class="bg-teal-50/70 border border-teal-200 rounded-xl p-4 flex flex-col gap-3 text-center">
+                <h4 class="text-xs font-bold text-teal-900 uppercase tracking-wider flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-hand-holding-dollar text-teal-600"></i> Apoie este Projeto
+                </h4>
+                <p class="text-xs text-teal-800 leading-relaxed">
+                    Se este aplicativo tem ajudado no seu dia a dia e você deseja contribuir voluntariamente para a manutenção e novos recursos, fique à vontade para enviar qualquer valor via Pix:
+                </p>
+
+                <!-- Chave Pix -->
+                <div class="bg-white border border-teal-300 rounded-lg p-3 flex flex-col items-center gap-2 shadow-xs">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Chave Pix (Aleatória)</span>
+                    <span id="chavePixTexto" class="font-mono text-xs font-bold text-slate-700 break-all select-all bg-slate-100 px-2 py-1 rounded w-full">
+                        a9dfbdf1-a844-45ca-b17c-161a073e8335
+                    </span>
+                    <button onclick="copiarChavePix()" id="btnCopiarPix" class="w-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-copy"></i> Copiar Chave Pix
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="fecharTelaSobre()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold p-3 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer text-sm">
+                Voltar ao Inicio
             </button>
         </main>
     </div>
@@ -249,15 +320,12 @@
     <!-- MODAL DE EDIÇÃO DO DIA -->
     <div id="modalDia" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 hidden z-50">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-            <!-- Cabeçalho Modal -->
             <div id="modalHeader" class="bg-teal-700 text-white p-4 flex justify-between items-center transition-colors">
                 <h3 id="modalTituloData" class="font-bold text-base">Editar Dia</h3>
                 <button onclick="fecharModalDia()" class="text-white/80 hover:text-white cursor-pointer text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <!-- Corpo Modal -->
             <div class="p-5 flex flex-col gap-4 overflow-y-auto">
-                <!-- Horas e Minutos do Dia (SOMENTE LEITURA / AUTOMÁTICO) -->
                 <div class="grid grid-cols-2 gap-3 bg-slate-100 p-3 rounded-xl border border-slate-200">
                     <div>
                         <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Horas Totais (Auto)</label>
@@ -269,7 +337,6 @@
                     </div>
                 </div>
 
-                <!-- Modalidades de Campo -->
                 <div class="flex flex-col gap-2">
                     <label class="text-xs font-bold text-slate-600 uppercase">Modalidades (Informe os Minutos)</label>
                     <div class="grid grid-cols-2 gap-2 text-xs">
@@ -300,7 +367,6 @@
                     </div>
                 </div>
 
-                <!-- Atividades do Dia -->
                 <div class="flex flex-col gap-2">
                     <label class="text-xs font-bold text-slate-600 uppercase">Atividades Realizadas</label>
                     <div class="grid grid-cols-3 gap-2">
@@ -320,7 +386,6 @@
                 </div>
             </div>
 
-            <!-- Rodapé Modal -->
             <div class="bg-slate-50 p-4 border-t border-slate-200 flex gap-2">
                 <button onclick="fecharModalDia()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Cancelar</button>
                 <button id="btnSalvarDia" onclick="salvarDadosDia()" class="w-1/2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Salvar Dia</button>
@@ -339,18 +404,20 @@
         };
 
         const dataRealAtual = new Date();
-        const anoAtual = dataRealAtual.getFullYear();
-        const mesRealAtualIndex = dataRealAtual.getMonth();
-        const mesRealString = `${anoAtual}-${String(mesRealAtualIndex + 1).padStart(2, '0')}`;
+        const anoAtualReal = dataRealAtual.getFullYear();
+        const mesRealIndex = dataRealAtual.getMonth();
+        const mesRealStr = String(mesRealIndex + 1).padStart(2, '0');
 
-        let anoMesSelecionado = mesRealString;
+        let anoSelecionado = String(anoAtualReal);
+        let mesSelecionado = mesRealStr;
+        let anoMesSelecionado = `${anoSelecionado}-${mesSelecionado}`;
         let diaEditandoAtual = null;
 
         let modoCor = localStorage.getItem('publicador_modo_cor') || 'padrao';
         let temaPadrao = localStorage.getItem('publicador_tema_padrao') || 'teal';
         let coresCustom = JSON.parse(localStorage.getItem('publicador_cores_custom')) || { principal: '#0f766e', texto: '#0f766e', fundo: '#f0fdf4' };
 
-        popularSeletorMeses();
+        popularSeletoresData();
 
         document.getElementById('inputNome').value = localStorage.getItem('publicador_nome') || '';
         document.getElementById('inputCongregacao').value = localStorage.getItem('publicador_congregacao') || '';
@@ -370,7 +437,34 @@
         alternarModoCor(modoCor);
         atualizarInterface();
 
-        // CONTROLE DE NAVEGAÇÃO DE TELA
+        function popularSeletoresData() {
+            const selectAno = document.getElementById('selectAno');
+            selectAno.innerHTML = '';
+            
+            let anoInicio = anoAtualReal - 2;
+            let anoFim = anoAtualReal + 5;
+
+            for (let a = anoInicio; a <= anoFim; a++) {
+                let opt = document.createElement('option');
+                opt.value = String(a);
+                opt.text = (a === anoAtualReal) ? `${a} (Atual)` : String(a);
+                selectAno.appendChild(opt);
+            }
+
+            document.getElementById('selectMes').value = mesRealStr;
+            document.getElementById('selectAno').value = String(anoAtualReal);
+        }
+
+        function mudarDataSelecionada() {
+            mesSelecionado = document.getElementById('selectMes').value;
+            anoSelecionado = document.getElementById('selectAno').value;
+            anoMesSelecionado = `${anoSelecionado}-${mesSelecionado}`;
+
+            dadosMes = carregarDadosDoMes(anoMesSelecionado);
+            atualizarInterface();
+        }
+
+        // TELA PERSONALIZAÇÃO
         function abrirTelaPersonalizacao() {
             document.getElementById('paginaInicial').classList.add('hidden');
             document.getElementById('paginaInicial').classList.remove('flex');
@@ -383,6 +477,36 @@
             document.getElementById('telaPersonalizacao').classList.remove('flex');
             document.getElementById('paginaInicial').classList.remove('hidden');
             document.getElementById('paginaInicial').classList.add('flex');
+        }
+
+        // TELA SOBRE / PIX
+        function abrirTelaSobre() {
+            document.getElementById('paginaInicial').classList.add('hidden');
+            document.getElementById('paginaInicial').classList.remove('flex');
+            document.getElementById('telaSobre').classList.remove('hidden');
+            document.getElementById('telaSobre').classList.add('flex');
+        }
+
+        function fecharTelaSobre() {
+            document.getElementById('telaSobre').classList.add('hidden');
+            document.getElementById('telaSobre').classList.remove('flex');
+            document.getElementById('paginaInicial').classList.remove('hidden');
+            document.getElementById('paginaInicial').classList.add('flex');
+        }
+
+        function copiarChavePix() {
+            const chave = document.getElementById('chavePixTexto').innerText.trim();
+            navigator.clipboard.writeText(chave).then(() => {
+                const btn = document.getElementById('btnCopiarPix');
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Chave Copiada!`;
+                btn.classList.remove('bg-teal-600', 'hover:bg-teal-700');
+                btn.classList.add('bg-emerald-600');
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copiar Chave Pix`;
+                    btn.classList.remove('bg-emerald-600');
+                    btn.classList.add('bg-teal-600', 'hover:bg-teal-700');
+                }, 2000);
+            });
         }
 
         function alternarModoCor(modo) {
@@ -415,7 +539,7 @@
             temaPadrao = nomeTema;
             localStorage.setItem('publicador_tema_padrao', nomeTema);
             aplicarEstilosGlobais(paletasPadrao[nomeTema]);
-            renderizarCalendarioDias(anoMesSelecionado.split('-')[0], anoMesSelecionado.split('-')[1]);
+            renderizarCalendarioDias(anoSelecionado, mesSelecionado);
         }
 
         function selecionarCorDoGradiente(event) {
@@ -429,11 +553,7 @@
             const corHexTexto = hslToHex(hue, 80, 25);
             const corHexFundo = hslToHex(hue, 80, 97);
 
-            coresCustom = {
-                principal: corHexPrincipal,
-                texto: corHexTexto,
-                fundo: corHexFundo
-            };
+            coresCustom = { principal: corHexPrincipal, texto: corHexTexto, fundo: corHexFundo };
 
             document.getElementById('pickerCorPrincipal').value = corHexPrincipal;
             document.getElementById('pickerCorTexto').value = corHexTexto;
@@ -441,7 +561,7 @@
 
             localStorage.setItem('publicador_cores_custom', JSON.stringify(coresCustom));
             aplicarEstilosGlobais(coresCustom);
-            renderizarCalendarioDias(anoMesSelecionado.split('-')[0], anoMesSelecionado.split('-')[1]);
+            renderizarCalendarioDias(anoSelecionado, mesSelecionado);
         }
 
         function hslToHex(h, s, l) {
@@ -463,12 +583,14 @@
             };
             localStorage.setItem('publicador_cores_custom', JSON.stringify(coresCustom));
             aplicarEstilosGlobais(coresCustom);
-            renderizarCalendarioDias(anoMesSelecionado.split('-')[0], anoMesSelecionado.split('-')[1]);
+            renderizarCalendarioDias(anoSelecionado, mesSelecionado);
         }
 
         function aplicarEstilosGlobais(c) {
             document.getElementById('appHeader').style.backgroundColor = c.principal;
             document.getElementById('headerPersonalizacao').style.backgroundColor = c.principal;
+            document.getElementById('headerSobre').style.backgroundColor = c.principal;
+            
             document.getElementById('bannerFrase').style.backgroundColor = c.fundo;
             document.getElementById('textoFrase').style.color = c.texto;
             document.getElementById('autorFrase').style.color = c.principal;
@@ -502,36 +624,6 @@
 
             document.getElementById('modalHeader').style.backgroundColor = c.principal;
             document.getElementById('btnSalvarDia').style.backgroundColor = c.principal;
-        }
-
-        function popularSeletorMeses() {
-            const select = document.getElementById('selectMesAno');
-            select.innerHTML = '';
-            const nomesMeses = [
-                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-            ];
-
-            nomesMeses.forEach((nome, index) => {
-                let mesStr = String(index + 1).padStart(2, '0');
-                let valorOption = `${anoAtual}-${mesStr}`;
-                let option = document.createElement('option');
-                option.value = valorOption;
-                if (index === mesRealAtualIndex) {
-                    option.text = `⭐ ${nome} (Atual)`;
-                    option.style.fontWeight = "bold";
-                } else {
-                    option.text = nome;
-                }
-                select.appendChild(option);
-            });
-            select.value = mesRealString;
-        }
-
-        function mudarMesSelecionado() {
-            anoMesSelecionado = document.getElementById('selectMesAno').value;
-            dadosMes = carregarDadosDoMes(anoMesSelecionado);
-            atualizarInterface();
         }
 
         function carregarDadosDoMes(mesAno) {
@@ -758,6 +850,8 @@
                 let minutosTrabalhados = Math.round(segundosCronometro / 60);
                 if (minutosTrabalhados > 0) {
                     let hojeStr = String(dataRealAtual.getDate());
+                    let mesRealString = `${anoAtualReal}-${mesRealStr}`;
+                    
                     if (anoMesSelecionado === mesRealString) {
                         if (!dadosMes.dias[hojeStr]) {
                             dadosMes.dias[hojeStr] = { minutos: 0, pub: 0, vid: 0, rev: 0 };
@@ -768,7 +862,7 @@
                         atualizarInterface();
                         alert(`Adicionados ${minutosTrabalhados} minutos ao dia de hoje (${hojeStr}) com sucesso!`);
                     } else {
-                        alert(`Cronômetro finalizado (${minutosTrabalhados} min), mas você está visualizando um mês anterior. Alterne para o mês atual para registrar no dia de hoje.`);
+                        alert(`Cronômetro finalizado (${minutosTrabalhados} min), mas você está visualizando um mês/ano diferente do atual.`);
                     }
                 }
                 segundosCronometro = 0;
